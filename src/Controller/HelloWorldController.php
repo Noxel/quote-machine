@@ -4,8 +4,9 @@ namespace App\Controller;
 
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-class HelloWorldController
+class HelloWorldController extends Controller
 {
      /**
       * @Route("/hello/{page}" , name="helloWorld" )
@@ -26,4 +27,28 @@ class HelloWorldController
 
         return new Response('<html><body>'.$html.' </body></html>');
     }
+
+    /**
+     * @Route("/hello2/{nom}")
+     */
+    public function hello2Action($nom = 'lol'){
+        return $this->render('/hello.html.twig', [
+            'nom' => $nom
+        ]);
+    }
+
+    /**
+     * @Route("/Pirates{nbr}/{mot}")
+     */
+    public function PiratesAction($nbr =1, $mot = 'kek'){
+
+        if($nbr > 9999)
+            $nbr = 9999;
+        return $this->render('/pirate.html.twig', [
+            'nbr' => $nbr,
+            'mot' => $mot
+        ]);
+    }
+
+
 }

@@ -1,0 +1,10 @@
+{%  extends "base.html.twig" %}
+{% block body %}
+    <ul>
+ {% for quote in quotes %}
+        <li>{{ quote['quote'] }}<i>{{ quote['meta'] }}</i></li>
+     <br>
+ {% endfor %}
+    </ul>
+
+{% endblock %}
