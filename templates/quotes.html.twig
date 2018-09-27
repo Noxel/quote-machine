@@ -1,5 +1,11 @@
 {%  extends "base.html.twig" %}
 {% block body %}
+<form action="/quotes">
+    <input type="text" name="search">
+    <input type="submit" value="Submit">
+</form>
+
+
     <ul>
  {% for quote in quotes %}
         <li>{{ quote['quote'] }}<i>{{ quote['meta'] }}</i></li>
