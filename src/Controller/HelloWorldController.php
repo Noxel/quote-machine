@@ -8,9 +8,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class HelloWorldController extends Controller
 {
-     /**
-      * @Route("/hello/{page}" , name="helloWorld" )
-      */
+    /**
+     * @Route("/hello/{page}" , name="helloWorld" )
+     */
     public function index($page =1)
     {
         return new Response('<html><body>Hello '.$page.'</body></html>');
@@ -19,9 +19,11 @@ class HelloWorldController extends Controller
     /**
      * @Route("/Pirate{nb}", name="Pirate")
      */
-    public function list($nb = 1){
+    public function list($nb = 1)
+    {
         $html = 'Yo';
-        for($i = 0; $i <$nb; $i++ ){
+
+        for ($i = 0; $i <$nb; $i++) {
             $html.=' Ho';
         }
 
@@ -31,7 +33,8 @@ class HelloWorldController extends Controller
     /**
      * @Route("/hello2/{nom}")
      */
-    public function hello2Action($nom = 'lol'){
+    public function hello2($nom = 'lol')
+    {
         return $this->render('/hello.html.twig', [
             'nom' => $nom
         ]);
@@ -40,15 +43,15 @@ class HelloWorldController extends Controller
     /**
      * @Route("/Pirates{nbr}/{mot}")
      */
-    public function PiratesAction($nbr =1, $mot = 'kek'){
-
-        if($nbr > 9999)
+    public function Pirates($nbr =1, $mot = 'kek')
+    {
+        if ($nbr > 9999) {
             $nbr = 9999;
+        }
+
         return $this->render('/pirate.html.twig', [
             'nbr' => $nbr,
             'mot' => $mot
         ]);
     }
-
-
 }

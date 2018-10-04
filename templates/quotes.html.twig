@@ -1,16 +1,35 @@
 {%  extends "base.html.twig" %}
 {% block body %}
-<form action="/quotes">
-    <input type="text" name="search">
-    <input type="submit" value="Submit">
-</form>
-
-
+    <div>
+        <div >
+            {{ form_start(formAdd) }}
+            {{ form_widget(formAdd) }}
+            {{ form_end(formAdd) }}
+        </div>
+        <div >
+            {{ form_start(form) }}
+            {{ form_widget(form) }}
+            {{ form_end(form) }}
+        </div>
+    </div>
+    <div>
     <ul>
- {% for quote in quotes %}
-        <li>{{ quote['quote'] }}<i>{{ quote['meta'] }}</i></li>
-     <br>
- {% endfor %}
-    </ul>
+        {% for quote in quotes %}
+            <li>{{ quote.quote }}
+                <i>{{ quote.meta }}</i>
+                <a href="{{ path('update_quote' , {id : quote.id}) }}">Update</a>
+                <a href="{{ path('delete_quote', {id : quote.id})}}">Delete</a>
+            </li>
+            <br>
+        {% endfor %}
+        </ul>
+    </div>
+    {% for message in app.flashes('notice') %}
+        <div class="flash-notice">
+            {{ message }}
+        </div>
+    {% endfor %}
+
+
 
 {% endblock %}

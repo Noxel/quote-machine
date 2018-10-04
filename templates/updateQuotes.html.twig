@@ -1,0 +1,20 @@
+{%  extends "base.html.twig" %}
+{% block stylesheets %}
+    <style type="text/css">
+    input{
+        width: 1000px;
+        height: 50px;
+
+    }
+    </style>
+
+{% endblock %}
+{% block body %}
+<div>
+    <div >
+        {{ form_start(formAdd) }}
+        {{ form_widget(formAdd) }}
+        {{ form_end(formAdd) }}
+    </div>
+</div>
+{% endblock %}
