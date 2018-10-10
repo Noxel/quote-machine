@@ -7,12 +7,37 @@ use App\Form\QuoteSearchType;
 use App\Form\QuoteType;
 use App\Repository\QuoteRepository;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Tests\RequestContentProxy;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class QuoteController extends Controller
 {
+
+    /**
+     * Methode de recherche en fonction du POST[quote][search]
+     *
+     * @return array de Quote
+     */
+    public static function rechercher()
+    {
+        $quotes = [];
+        $quoteRep = new QuoteRepository('../var/quotes.json');
+        if (isset($_POST['quote_search']['search'])) {
+            $src = $_POST['quote_search']['search'];
+
+            if (isset($src)) {
+                foreach ($quoteRep->findAll() as $quote) {
+                    if (stripos($quote->getQuote(), $src) !== false) {
+                        $quotes[] = $quote;
+                    }
+                }
+            }
+        } else {
+            $quotes = $quoteRep->findAll();
+        }
+
+        return $quotes;
+    }
 
 
 
@@ -44,7 +69,7 @@ class QuoteController extends Controller
 
 
         return $this->render('/quotes.html.twig', [
-            'quotes' => Quote::search(),
+            'quotes' => QuoteController::rechercher(),
             'form' => $form->createView(),
             'formAdd' => $formAdd->createView()
         ]);
@@ -96,4 +121,6 @@ class QuoteController extends Controller
 
         return $this->redirectToRoute('quotes');
     }
+
+
 }

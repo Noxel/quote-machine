@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\QuoteRepository;
-use Symfony\Component\HttpKernel\DataCollector\DumpDataCollector;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class Quote
@@ -51,29 +50,5 @@ class Quote
         $this->meta = $m;
     }
 
-    /**
-     * Methode de recherche en fonction du POST[quote][search]
-     *
-     * @return array de Quote
-     */
-    public static function search()
-    {
-        $quotes = [];
-        $quoteRep = new QuoteRepository('../var/quotes.json');
-        if (isset($_POST['quote_search']['search'])) {
-            $src = $_POST['quote_search']['search'];
 
-            if (isset($src)) {
-                foreach ($quoteRep->findAll() as $quote) {
-                    if (stripos($quote->getQuote(), $src) !== false) {
-                        $quotes[] = $quote;
-                    }
-                }
-            }
-        } else {
-            $quotes = $quoteRep->findAll();
-        }
-
-        return $quotes;
-    }
 }
