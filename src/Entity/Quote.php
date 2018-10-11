@@ -2,53 +2,56 @@
 
 namespace App\Entity;
 
-use App\Repository\QuoteRepository;
-use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\ORM\Mapping as ORM;
 
+/**
+ * @ORM\Entity(repositoryClass="App\Repository\QuoteRepository")
+ */
 class Quote
 {
-    protected $id;
+    /**
+     * @ORM\Id()
+     * @ORM\GeneratedValue()
+     * @ORM\Column(type="integer")
+     */
+    private $id;
 
     /**
-     * @Assert\NotBlank()
+     * @ORM\Column(type="string", length=255)
      */
-    protected $quote;
+    private $quote;
 
     /**
-     * @Assert\NotBlank()
+     * @ORM\Column(type="string", length=100)
      */
-    protected $meta;
+    private $meta;
 
-
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getQuote()
+    public function getQuote(): ?string
     {
         return $this->quote;
     }
 
-    public function getMeta()
+    public function setQuote(string $quote): self
+    {
+        $this->quote = $quote;
+
+        return $this;
+    }
+
+    public function getMeta(): ?string
     {
         return $this->meta;
     }
 
-    public function setId($id)
+    public function setMeta(string $meta): self
     {
-        $this->id = $id;
+        $this->meta = $meta;
+
+        return $this;
     }
-
-    public function setQuote($q)
-    {
-        $this->quote = $q;
-    }
-
-    public function setMeta($m)
-    {
-        $this->meta = $m;
-    }
-
-
 }

@@ -18,19 +18,17 @@ class QuoteController extends Controller
      *
      * @return array de Quote
      */
-    public static function rechercher()
+    public function rechercher()
     {
         $quotes = [];
-        $quoteRep = new QuoteRepository('../var/quotes.json');
+        $quoteRep = $this->getDoctrine()->getRepository(Quote::class);
         if (isset($_POST['quote_search']['search'])) {
             $src = $_POST['quote_search']['search'];
 
             if (isset($src)) {
-                foreach ($quoteRep->findAll() as $quote) {
-                    if (stripos($quote->getQuote(), $src) !== false) {
-                        $quotes[] = $quote;
-                    }
-                }
+
+                $quotes = $quoteRep->findQuotes($src);
+
             }
         } else {
             $quotes = $quoteRep->findAll();
@@ -44,12 +42,12 @@ class QuoteController extends Controller
     /**
      * @Route("/quotes", name="quotes")
      */
-    public function search(Request $request)
+    public function quote(Request $request)
     {
         $form = $this->createForm(QuoteSearchType::class);
 
         $quote = new Quote();
-        $quoteRep = new QuoteRepository('../var/quotes.json');
+        $quoteRep = $this->getDoctrine()->getManager();
 
         $formAdd = $this->createForm(QuoteType::class, $quote);
 
@@ -57,8 +55,9 @@ class QuoteController extends Controller
 
 
         if ($formAdd->isSubmitted() && $formAdd->isValid()) {
-            $quote = $formAdd->getData();
             $quoteRep->persist($quote);
+            $quoteRep->flush();
+
 
             $this->addFlash(
                 'notice',
@@ -69,7 +68,7 @@ class QuoteController extends Controller
 
 
         return $this->render('/quotes.html.twig', [
-            'quotes' => QuoteController::rechercher(),
+            'quotes' => $this->rechercher(),
             'form' => $form->createView(),
             'formAdd' => $formAdd->createView()
         ]);
@@ -80,8 +79,8 @@ class QuoteController extends Controller
      */
     public function update($id = null, Request $request)
     {
-        $quoteRep = new QuoteRepository('../var/quotes.json');
-        $quote = $quoteRep->find($id);
+        $quoteRep = $this->getDoctrine()->getManager();
+        $quote = $quoteRep->getRepository(Quote::class)->find($id);
 
         $formAdd = $this->createForm(QuoteType::class, $quote);
 
@@ -89,8 +88,9 @@ class QuoteController extends Controller
 
 
         if ($formAdd->isSubmitted() && $formAdd->isValid()) {
-            $quote = $formAdd->getData();
-            $quoteRep->persist($quote);
+
+
+            $quoteRep->flush();
 
 
             $this->addFlash(
@@ -111,8 +111,10 @@ class QuoteController extends Controller
      */
     public function delete($id = null)
     {
-        $quoteRep = new QuoteRepository('../var/quotes.json');
-        $quoteRep->delete($quoteRep->find($id));
+        $quoteRep = $this->getDoctrine()->getManager();
+        $quote = $quoteRep->getRepository(Quote::class)->find($id);
+        $quoteRep->remove($quote);
+        $quoteRep->flush();
 
         $this->addFlash(
             'notice',
@@ -121,6 +123,22 @@ class QuoteController extends Controller
 
         return $this->redirectToRoute('quotes');
     }
+
+    /**
+     * @Route("/Random", name="random_quote")
+     */
+    public function random($id = null)
+    {
+
+        $quoteRep = $this->getDoctrine()->getRepository(Quote::class);
+        $quotes = $quoteRep->findAll();
+        $quote = $quotes[rand(0, sizeof($quotes) -1)];
+
+        return $this->render('/randomQuote.html.twig', [
+            'quote' => $quote,
+        ]);
+    }
+
 
 
 }

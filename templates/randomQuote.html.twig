@@ -1,0 +1,11 @@
+{%  extends "base.html.twig" %}
+{% block body %}
+<div>
+    <a href="{{ path('quotes', {})}}">back</a>
+
+    <div >
+        {{ quote.quote }}
+        <i>{{ quote.meta }}</i>
+    </div>
+</div>
+{% endblock %}
