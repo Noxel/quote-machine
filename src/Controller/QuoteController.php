@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Entity\Quote;
 use App\Form\QuoteSearchType;
 use App\Form\QuoteType;
-use App\Repository\QuoteRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -18,17 +17,17 @@ class QuoteController extends Controller
      *
      * @return array de Quote
      */
-    public function rechercher()
+    public function rechercher(Request $request)
     {
         $quotes = [];
         $quoteRep = $this->getDoctrine()->getRepository(Quote::class);
-        if (isset($_POST['quote_search']['search'])) {
-            $src = $_POST['quote_search']['search'];
+
+
+        if ($request->request->get('quote_search')) {
+            $src = $request->request->get('quote_search')['search'];
 
             if (isset($src)) {
-
                 $quotes = $quoteRep->findQuotes($src);
-
             }
         } else {
             $quotes = $quoteRep->findAll();
@@ -68,7 +67,7 @@ class QuoteController extends Controller
 
 
         return $this->render('/quotes.html.twig', [
-            'quotes' => $this->rechercher(),
+            'quotes' => $this->rechercher($request),
             'form' => $form->createView(),
             'formAdd' => $formAdd->createView()
         ]);
@@ -83,13 +82,9 @@ class QuoteController extends Controller
         $quote = $quoteRep->getRepository(Quote::class)->find($id);
 
         $formAdd = $this->createForm(QuoteType::class, $quote);
-
         $formAdd->handleRequest($request);
 
-
         if ($formAdd->isSubmitted() && $formAdd->isValid()) {
-
-
             $quoteRep->flush();
 
 
@@ -129,7 +124,6 @@ class QuoteController extends Controller
      */
     public function random($id = null)
     {
-
         $quoteRep = $this->getDoctrine()->getRepository(Quote::class);
         $quotes = $quoteRep->findAll();
         $quote = $quotes[rand(0, sizeof($quotes) -1)];
@@ -138,7 +132,4 @@ class QuoteController extends Controller
             'quote' => $quote,
         ]);
     }
-
-
-
 }
