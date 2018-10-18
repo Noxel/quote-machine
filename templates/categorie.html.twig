@@ -5,7 +5,7 @@
             overflow: hidden;
             background-color: #f1f1f1;
             padding: 20px 10px;
-            }
+        }
 
         .header div {
             float: left;
@@ -37,36 +37,25 @@
 {% endblock %}
 {% block body %}
 
+
+
     <div class="header">
-
-        <a href="{{ path('categorie', {})}}"><input type="button" value="Categorie"></a>
-        <a href="{{ path('random_quote', {})}}"><input type="button" value="Random"></a>
-
-
+        <a href="{{ path('quotes', {})}}"><input type="button" value="Quotes"></a>
         <div >
             {{ form_start(formAdd) }}
             {{ form_widget(formAdd) }}
             {{ form_end(formAdd) }}
         </div>
-
-        <div >
-            {{ form_start(form) }}
-            {{ form_widget(form) }}
-            {{ form_end(form) }}
-        </div>
     </div>
     <div>
         <ul>
-        {% for quote in quotes %}
-            <li>{{ quote.quote }}
-                <i>{{ quote.meta }}</i>
-                <a href="{{ path('quotebycategorie_categorie' , {id : quote.getCategory().getId() }) }}">{{ quote.getCategory().getName() }}</a>
+            {% for cat in cats %}
+                <li><a href="{{ path('quotebycategorie_categorie' , {id : cat.id}) }}">{{ cat.name }}</a>
+                    <a href="{{ path('update_categorie' , {id : cat.id}) }}"><input type="button" value="update"></a>
+                    <a href="{{ path('delete_categorie', {id : cat.id})}}"><input type="button" value="delete"></a>
+                </li>
                 <br>
-                <a href="{{ path('update_quote' , {id : quote.id}) }}"><input type="button" value="update"></a>
-                <a href="{{ path('delete_quote', {id : quote.id})}}"><input type="button" value="delete"></a>
-            </li>
-            <br>
-        {% endfor %}
+            {% endfor %}
         </ul>
     </div>
     {% for message in app.flashes('notice') %}

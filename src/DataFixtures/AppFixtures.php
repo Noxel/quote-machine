@@ -8,7 +8,7 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\Product;
+use App\Entity\Category;
 use App\Entity\Quote;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -24,13 +24,20 @@ class AppFixtures extends Fixture
         $serialier = new Serializer([new GetSetMethodNormalizer(), new ArrayDenormalizer()], [new JsonEncoder()]);
         $datas = $serialier->deserialize(file_get_contents('var/quotes.json'), 'App\Entity\Quote[]', 'json');
 
+        $cat = new Category();
+        $cat->setName("Category de quotes");
+        $manager->persist($cat);
+
         foreach ($datas as $data) {
             $quote = new Quote();
             $quote->setMeta($data->getMeta());
             $quote->setQuote($data->getQuote());
+            $quote->setCategory($cat);
             $manager->persist($quote);
         }
 
         $manager->flush();
+
+
     }
 }

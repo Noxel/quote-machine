@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\Category;
 use App\Entity\Quote;
+use App\Form\CategoryType;
 use App\Form\QuoteSearchType;
 use App\Form\QuoteType;
 use Symfony\Component\HttpFoundation\Request;
@@ -76,10 +78,9 @@ class QuoteController extends Controller
     /**
      * @Route("/Update/{id}", name="update_quote")
      */
-    public function update($id = null, Request $request)
+    public function update(Quote $quote , Request $request)
     {
         $quoteRep = $this->getDoctrine()->getManager();
-        $quote = $quoteRep->getRepository(Quote::class)->find($id);
 
         $formAdd = $this->createForm(QuoteType::class, $quote);
         $formAdd->handleRequest($request);
@@ -97,17 +98,16 @@ class QuoteController extends Controller
             return $this->redirectToRoute('quotes');
         }
 
-        return $this->render('/updateQuotes.html.twig', [
+        return $this->render('/update.html.twig', [
             'formAdd' => $formAdd->createView(),
         ]);
     }
     /**
      * @Route("/Delete/{id}", name="delete_quote")
      */
-    public function delete($id = null)
+    public function delete(Quote $quote)
     {
         $quoteRep = $this->getDoctrine()->getManager();
-        $quote = $quoteRep->getRepository(Quote::class)->find($id);
         $quoteRep->remove($quote);
         $quoteRep->flush();
 
@@ -122,7 +122,7 @@ class QuoteController extends Controller
     /**
      * @Route("/Random", name="random_quote")
      */
-    public function random($id = null)
+    public function random()
     {
         $quoteRep = $this->getDoctrine()->getRepository(Quote::class);
         $quotes = $quoteRep->findAll();
@@ -132,4 +132,94 @@ class QuoteController extends Controller
             'quote' => $quote,
         ]);
     }
+
+    /**
+     * @Route("/Categorie", name="categorie")
+     */
+    public function categorie(Request $request){
+
+        $catManager = $this->getDoctrine()->getManager();
+        $catRep = $this->getDoctrine()->getRepository(Category::class);
+
+        $cat = new Category();
+        $formAdd = $this->createForm(CategoryType::class, $cat );
+
+        $formAdd->handleRequest($request);
+
+        if ($formAdd->isSubmitted() && $formAdd->isValid()) {
+            $catManager->persist($cat);
+            $catManager->flush();
+
+
+            $this->addFlash(
+                'notice',
+                'Your add were saved!'
+            );
+        }
+
+        return $this->render('/categorie.html.twig', [
+            'cats' => $catRep->findAll(),
+            'formAdd' => $formAdd->createView()
+        ]);
+    }
+
+    /**
+     * @Route("/Categorie", name="update_categorie")
+     */
+    public function updateCategorie(Category $cat , Request $request){
+
+        $quoteRep = $this->getDoctrine()->getManager();
+        $formAdd = $this->createForm(CategoryType::class, $cat);
+        $formAdd->handleRequest($request);
+
+        if ($formAdd->isSubmitted() && $formAdd->isValid()) {
+            $quoteRep->flush();
+
+
+            $this->addFlash(
+                'notice',
+                'Your update were saved!'
+            );
+
+
+            return $this->redirectToRoute('quotes');
+        }
+
+        return $this->render('/update.html.twig', [
+            'formAdd' => $formAdd->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/CategorieDelete{id}", name="delete_categorie")
+     */
+    public function deleteCategorie(Category $cat){
+        $quoteRep = $this->getDoctrine()->getManager();
+        $quoteRep->remove($cat);
+        $quoteRep->flush();
+
+
+        $this->addFlash(
+            'notice',
+            'Your delete were saved!'
+        );
+
+        return $this->redirectToRoute('categorie');
+    }
+
+    /**
+     * @Route("/QuoteByCategorie{id}", name="quotebycategorie_categorie")
+     */
+    public function quoteByCategorie($id){
+
+        $cat = $this->getDoctrine()->getRepository(Category::class)->find($id);
+
+        return $this->render('/quoteByCategorie.html.twig', [
+            'quotes' => $cat->getQuotes() ,
+            'cat' => $cat,
+        ]);
+    }
+
+
+
 }
