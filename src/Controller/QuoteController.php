@@ -78,7 +78,7 @@ class QuoteController extends Controller
     /**
      * @Route("/Update/{id}", name="update_quote")
      */
-    public function update(Quote $quote , Request $request)
+    public function update(Quote $quote, Request $request)
     {
         $quoteRep = $this->getDoctrine()->getManager();
 
@@ -136,13 +136,13 @@ class QuoteController extends Controller
     /**
      * @Route("/Categorie", name="categorie")
      */
-    public function categorie(Request $request){
-
+    public function categorie(Request $request)
+    {
         $catManager = $this->getDoctrine()->getManager();
         $catRep = $this->getDoctrine()->getRepository(Category::class);
 
         $cat = new Category();
-        $formAdd = $this->createForm(CategoryType::class, $cat );
+        $formAdd = $this->createForm(CategoryType::class, $cat);
 
         $formAdd->handleRequest($request);
 
@@ -164,10 +164,10 @@ class QuoteController extends Controller
     }
 
     /**
-     * @Route("/Categorie", name="update_categorie")
+     * @Route("/UpdateCategorie{id}", name="update_categorie")
      */
-    public function updateCategorie(Category $cat , Request $request){
-
+    public function updateCategorie(Category $cat, Request $request)
+    {
         $quoteRep = $this->getDoctrine()->getManager();
         $formAdd = $this->createForm(CategoryType::class, $cat);
         $formAdd->handleRequest($request);
@@ -182,7 +182,7 @@ class QuoteController extends Controller
             );
 
 
-            return $this->redirectToRoute('quotes');
+            return $this->redirectToRoute('categorie');
         }
 
         return $this->render('/update.html.twig', [
@@ -193,8 +193,13 @@ class QuoteController extends Controller
     /**
      * @Route("/CategorieDelete{id}", name="delete_categorie")
      */
-    public function deleteCategorie(Category $cat){
+    public function deleteCategorie(Category $cat)
+    {
         $quoteRep = $this->getDoctrine()->getManager();
+        foreach ($cat->getQuotes() as $quote) {
+            $quoteRep->remove($quote);
+        }
+
         $quoteRep->remove($cat);
         $quoteRep->flush();
 
@@ -210,8 +215,8 @@ class QuoteController extends Controller
     /**
      * @Route("/QuoteByCategorie{id}", name="quotebycategorie_categorie")
      */
-    public function quoteByCategorie($id){
-
+    public function quoteByCategorie($id)
+    {
         $cat = $this->getDoctrine()->getRepository(Category::class)->find($id);
 
         return $this->render('/quoteByCategorie.html.twig', [
@@ -219,7 +224,4 @@ class QuoteController extends Controller
             'cat' => $cat,
         ]);
     }
-
-
-
 }
