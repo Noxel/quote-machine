@@ -7,6 +7,7 @@ use App\Entity\Quote;
 use App\Form\CategoryType;
 use App\Form\QuoteSearchType;
 use App\Form\QuoteType;
+use App\Util\Slugger;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -147,6 +148,7 @@ class QuoteController extends Controller
         $formAdd->handleRequest($request);
 
         if ($formAdd->isSubmitted() && $formAdd->isValid()) {
+            $cat->setSlug(Slugger::slugify($cat->getName()));
             $catManager->persist($cat);
             $catManager->flush();
 
