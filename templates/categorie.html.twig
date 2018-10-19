@@ -50,7 +50,7 @@
     <div>
         <ul>
             {% for cat in cats %}
-                <li><a href="{{ path('quotebycategorie_categorie' , {id : cat.id}) }}">{{ cat.name }}</a>
+                <li><a href="{{ path('quotebycategorie_categorie' , {slug : cat.slug}) }}">{{ cat.name }}</a>
                     <a href="{{ path('update_categorie' , {id : cat.id}) }}"><input type="button" value="update"></a>
                     <a href="{{ path('delete_categorie', {id : cat.id})}}"><input type="button" value="delete"></a>
                 </li>

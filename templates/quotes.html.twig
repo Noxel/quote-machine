@@ -60,7 +60,7 @@
         {% for quote in quotes %}
             <li>{{ quote.quote }}
                 <i>{{ quote.meta }}</i>
-                <a href="{{ path('quotebycategorie_categorie' , {id : quote.getCategory().getId() }) }}">{{ quote.getCategory().getName() }}</a>
+                <a href="{{ path('quotebycategorie_categorie' , {slug : quote.getCategory().getSlug() }) }}">{{ quote.getCategory().getName() }}</a>
                 <br>
                 <a href="{{ path('update_quote' , {id : quote.id}) }}"><input type="button" value="update"></a>
                 <a href="{{ path('delete_quote', {id : quote.id})}}"><input type="button" value="delete"></a>

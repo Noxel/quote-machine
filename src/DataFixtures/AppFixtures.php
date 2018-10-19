@@ -10,6 +10,7 @@ namespace App\DataFixtures;
 
 use App\Entity\Category;
 use App\Entity\Quote;
+use App\Util\Slugger;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
@@ -26,6 +27,7 @@ class AppFixtures extends Fixture
 
         $cat = new Category();
         $cat->setName("Category de quotes");
+        $cat->setSlug(Slugger::slugify($cat->getName()));
         $manager->persist($cat);
 
         foreach ($datas as $data) {

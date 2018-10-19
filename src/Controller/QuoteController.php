@@ -213,11 +213,12 @@ class QuoteController extends Controller
     }
 
     /**
-     * @Route("/QuoteByCategorie{id}", name="quotebycategorie_categorie")
+     * @Route("/QuoteByCategorie/{slug}", name="quotebycategorie_categorie")
      */
-    public function quoteByCategorie($id)
+    public function quoteByCategorie($slug)
     {
-        $cat = $this->getDoctrine()->getRepository(Category::class)->find($id);
+        $cats = $this->getDoctrine()->getRepository(Category::class)->findBy(['slug'=>$slug]);
+        $cat = array_shift($cats);
 
         return $this->render('/quoteByCategorie.html.twig', [
             'quotes' => $cat->getQuotes() ,
