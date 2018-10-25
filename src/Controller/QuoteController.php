@@ -166,7 +166,7 @@ class QuoteController extends Controller
     }
 
     /**
-     * @Route("/UpdateCategorie{id}", name="update_categorie")
+     * @Route("/UpdateCategorie/{id}", name="update_categorie")
      */
     public function updateCategorie(Category $cat, Request $request)
     {
@@ -193,7 +193,7 @@ class QuoteController extends Controller
     }
 
     /**
-     * @Route("/CategorieDelete{id}", name="delete_categorie")
+     * @Route("/CategorieDelete/{id}", name="delete_categorie")
      */
     public function deleteCategorie(Category $cat)
     {
@@ -219,8 +219,8 @@ class QuoteController extends Controller
      */
     public function quoteByCategorie($slug)
     {
-        $cats = $this->getDoctrine()->getRepository(Category::class)->findBy(['slug'=>$slug]);
-        $cat = array_shift($cats);
+        $cat = $this->getDoctrine()->getRepository(Category::class)->findOneBy(['slug'=>$slug]);
+
 
         return $this->render('/quoteByCategorie.html.twig', [
             'quotes' => $cat->getQuotes() ,

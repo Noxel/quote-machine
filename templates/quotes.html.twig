@@ -60,7 +60,7 @@
         {% for quote in quotes %}
             <li>{{ quote.quote }}
                 <i>{{ quote.meta }}</i>
-                <a href="{{ path('quotebycategorie_categorie' , {slug : quote.getCategory().getSlug() }) }}">{{ quote.getCategory().getName() }}</a>
+                <a href="{{ path('quotebycategorie_categorie' , {slug : quote.category.slug }) }}">{{ quote.getCategory().getName() }}</a>
                 <br>
                 <a href="{{ path('update_quote' , {id : quote.id}) }}"><input type="button" value="update"></a>
                 <a href="{{ path('delete_quote', {id : quote.id})}}"><input type="button" value="delete"></a>
@@ -69,11 +69,6 @@
         {% endfor %}
         </ul>
     </div>
-    {% for message in app.flashes('notice') %}
-        <div class="flash-notice">
-            {{ message }}
-        </div>
-    {% endfor %}
 
 
 
