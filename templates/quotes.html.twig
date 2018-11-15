@@ -48,12 +48,13 @@
         <a href="{{ path('categorie', {})}}"><input type="button" value="Categorie"></a>
         <a href="{{ path('random_quote', {})}}"><input type="button" value="Random"></a>
 
-
-        <div >
-            {{ form_start(formAdd) }}
-            {{ form_widget(formAdd) }}
-            {{ form_end(formAdd) }}
-        </div>
+          {% if is_granted('ROLE_USER') %}
+            <div >
+                {{ form_start(formAdd) }}
+                {{ form_widget(formAdd) }}
+                {{ form_end(formAdd) }}
+            </div>
+          {% endif %}
 
         <div >
             {{ form_start(form) }}
@@ -68,8 +69,10 @@
                 <i>{{ quote.meta }}</i>
                 <a href="{{ path('quotebycategorie_categorie' , {slug : quote.category.slug }) }}">{{ quote.getCategory().getName() }}</a>
                 <br>
-                <a href="{{ path('update_quote' , {id : quote.id}) }}"><input type="button" value="update"></a>
-                <a href="{{ path('delete_quote', {id : quote.id})}}"><input type="button" value="delete"></a>
+                {% if is_granted('ROLE_USER') %}
+                    <a href="{{ path('update_quote' , {id : quote.id}) }}"><input type="button" value="update"></a>
+                    <a href="{{ path('delete_quote', {id : quote.id})}}"><input type="button" value="delete"></a>
+                {% endif %}
             </li>
             <br>
         {% endfor %}

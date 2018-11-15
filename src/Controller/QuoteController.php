@@ -11,6 +11,7 @@ use App\Util\Slugger;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 class QuoteController extends Controller
 {
@@ -57,6 +58,7 @@ class QuoteController extends Controller
 
 
         if ($formAdd->isSubmitted() && $formAdd->isValid()) {
+            $this->denyAccessUnlessGranted('ROLE_USER');
             $quoteRep->persist($quote);
             $quoteRep->flush();
 
@@ -78,6 +80,7 @@ class QuoteController extends Controller
 
     /**
      * @Route("/Update/{id}", name="update_quote")
+     * @IsGranted("ROLE_USER")
      */
     public function update(Quote $quote, Request $request)
     {
@@ -105,6 +108,7 @@ class QuoteController extends Controller
     }
     /**
      * @Route("/Delete/{id}", name="delete_quote")
+     * @IsGranted("ROLE_USER")
      */
     public function delete(Quote $quote)
     {
@@ -148,6 +152,7 @@ class QuoteController extends Controller
         $formAdd->handleRequest($request);
 
         if ($formAdd->isSubmitted() && $formAdd->isValid()) {
+            $this->denyAccessUnlessGranted('ROLE_ADMIN');
             $cat->setSlug(Slugger::slugify($cat->getName()));
             $catManager->persist($cat);
             $catManager->flush();
@@ -167,6 +172,7 @@ class QuoteController extends Controller
 
     /**
      * @Route("/UpdateCategorie/{id}", name="update_categorie")
+     * @IsGranted("ROLE_ADMIN")
      */
     public function updateCategorie(Category $cat, Request $request)
     {
@@ -194,6 +200,7 @@ class QuoteController extends Controller
 
     /**
      * @Route("/CategorieDelete/{id}", name="delete_categorie")
+     * @IsGranted("ROLE_ADMIN")
      */
     public function deleteCategorie(Category $cat)
     {

@@ -41,18 +41,22 @@
 
     <div class="header">
         <a href="{{ path('quotes', {})}}"><input type="button" value="Quotes"></a>
-        <div >
-            {{ form_start(formAdd) }}
-            {{ form_widget(formAdd) }}
-            {{ form_end(formAdd) }}
-        </div>
+        {% if is_granted('ROLE_ADMIN') %}
+            <div >
+                {{ form_start(formAdd) }}
+                {{ form_widget(formAdd) }}
+                {{ form_end(formAdd) }}
+            </div>
+        {% endif %}
     </div>
     <div>
         <ul>
             {% for cat in cats %}
                 <li><a href="{{ path('quotebycategorie_categorie' , {slug : cat.slug}) }}">{{ cat.name }}</a>
-                    <a href="{{ path('update_categorie' , {id : cat.id}) }}"><input type="button" value="update"></a>
-                    <a href="{{ path('delete_categorie', {id : cat.id})}}"><input type="button" value="delete"></a>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <a href="{{ path('update_categorie' , {id : cat.id}) }}"><input type="button" value="update"></a>
+                        <a href="{{ path('delete_categorie', {id : cat.id})}}"><input type="button" value="delete"></a>
+                    {% endif %}
                 </li>
                 <br>
             {% endfor %}

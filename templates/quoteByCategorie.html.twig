@@ -50,8 +50,10 @@
                 <li>{{ quote.quote }}
                     <i>{{ quote.meta }}</i>
                     <br>
-                    <a href="{{ path('update_quote' , {id : quote.id}) }}"><input type="button" value="update"></a>
-                    <a href="{{ path('delete_quote', {id : quote.id})}}"><input type="button" value="delete"></a>
+                    {% if is_granted('ROLE_USER') %}
+                        <a href="{{ path('update_quote' , {id : quote.id}) }}"><input type="button" value="update"></a>
+                        <a href="{{ path('delete_quote', {id : quote.id})}}"><input type="button" value="delete"></a>
+                    {% endif %}
                 </li>
                 <br>
             {% endfor %}
