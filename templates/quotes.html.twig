@@ -36,8 +36,14 @@
 
 {% endblock %}
 {% block body %}
+    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+        <a href="{{ path('app_logout', {})}}"><input type="button" value="Logout"></a>
 
-    <div class="header">
+    {% else %}
+        <a href="{{ path('app_login', {})}}"><input type="button" value="Login"></a>
+
+    {%  endif %}
+      <div class="header">
 
         <a href="{{ path('categorie', {})}}"><input type="button" value="Categorie"></a>
         <a href="{{ path('random_quote', {})}}"><input type="button" value="Random"></a>
