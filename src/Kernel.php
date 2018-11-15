@@ -32,11 +32,7 @@ class Kernel extends BaseKernel
             if (isset($envs['all']) || isset($envs[$this->environment])) {
                 yield new $class();
             }
-            if (in_array($envs, ['dev', 'test'])) {
-                if ($envs === 'test') {
-                    $bundles[] = new DAMA\DoctrineTestBundle\DAMADoctrineTestBundle();
-                }
-            }
+
         }
     }
 
