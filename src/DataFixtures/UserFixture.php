@@ -29,15 +29,16 @@ class UserFixture extends Fixture
 
         $manager->persist($user);
 
-        $user->setUsername('admin');
-        $user->setRoles(['ROLE_ADMIN']);
+        $admin = new User();
+        $admin->setUsername('admin');
+        $admin->setRoles(['ROLE_ADMIN']);
 
-        $user->setPassword($this->passwordEncoder->encodePassword(
-            $user,
+        $admin->setPassword($this->passwordEncoder->encodePassword(
+            $admin,
             'admin'
         ));
 
-        $manager->persist($user);
+        $manager->persist($admin);
 
         $manager->flush();
     }
