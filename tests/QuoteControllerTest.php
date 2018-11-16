@@ -3,27 +3,29 @@
 namespace App\Tests;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\BrowserKit\Cookie;
-use Symfony\Component\Security\Guard\Token\PostAuthenticationGuardToken;
+
 
 class QuoteControllerTest extends WebTestCase
 {
     private $client = null;
 
-    public function setUp(){
+    public function setUp()
+    {
         $this->client = static ::createClient(array(), array(
             'PHP_AUTH_USER' => 'admin',
             'PHP_AUTH_PW'   => 'admin',
         ));
     }
 
-    public function testIndex(){
+    public function testIndex()
+    {
         $this->client->request('GET', '/quotes');
 
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
 
-    public function testCreationQuote(){
+    public function testCreationQuote()
+    {
         $this->client->followRedirects();
         $crawler = $this->client->request('GET', '/quotes');
 
@@ -40,7 +42,8 @@ class QuoteControllerTest extends WebTestCase
         $this->assertGreaterThan(0, $crawler->filter('a:contains("Category de quotes")')->count());
     }
 
-    public function testDeleteQuote(){
+    public function testDeleteQuote()
+    {
         $this->client->followRedirects();
         $crawler = $this->client->request('GET', '/quotes');
 
@@ -50,10 +53,10 @@ class QuoteControllerTest extends WebTestCase
         $crawler = $this->client->click($link);
         //verification que on as une quote de moins
         $this->assertLessThan($num, $crawler->filter('a:contains("Category de quotes")')->count());
-
     }
 
-    public function testUpdateQuote(){
+    public function testUpdateQuote()
+    {
         $this->client->followRedirects();
         $crawler = $this->client->request('GET', '/quotes');
 
@@ -69,7 +72,8 @@ class QuoteControllerTest extends WebTestCase
         $this->assertGreaterThan(0, $crawler->filter('li:contains("testQUpdate")')->count());
     }
 
-    public function testQuoteCategory(){
+    public function testQuoteCategory()
+    {
         $this->client->followRedirects();
         $crawler = $this->client->request('GET', '/quotes');
 
@@ -79,10 +83,10 @@ class QuoteControllerTest extends WebTestCase
         $crawler = $this->client->click($link);
         //verification du bon nombre de quote dans la category
         $this->assertEquals($num, $crawler->filter('li')->count());
-
     }
 
-    public function testSearchQuote(){
+    public function testSearchQuote()
+    {
         $this->client->followRedirects();
         $crawler = $this->client->request('GET', '/quotes');
 
@@ -95,7 +99,8 @@ class QuoteControllerTest extends WebTestCase
         $this->assertEquals($num, $crawler->filter('li')->count());
     }
 
-    public function testQuoteRandom(){
+    public function testQuoteRandom()
+    {
         $this->client->followRedirects();
         $crawler = $this->client->request('GET', '/quotes');
 
@@ -105,14 +110,16 @@ class QuoteControllerTest extends WebTestCase
         $this->assertEquals(1, $crawler->filter('div i')->count());
     }
 
-    public function testListeCategorie(){
+    public function testListeCategorie()
+    {
         $crawler = $this->client->request('GET', '/Categorie');
 
         //Liste Categorie
         $this->assertEquals(1, $crawler->filter('li')->count());
     }
 
-    public function testCreationCategorie(){
+    public function testCreationCategorie()
+    {
         $this->client->followRedirects();
         $crawler = $this->client->request('GET', '/Categorie');
 
@@ -123,7 +130,8 @@ class QuoteControllerTest extends WebTestCase
         $this->assertEquals(1, $crawler->filter('li:contains("testC")')->count());
     }
 
-    public function testDeleteCategorie(){
+    public function testDeleteCategorie()
+    {
         $this->client->followRedirects();
         $crawler = $this->client->request('GET', '/Categorie');
 
@@ -131,10 +139,10 @@ class QuoteControllerTest extends WebTestCase
         $link = $crawler->filter('a[href^="/CategorieDelete"]')->first()->link();
         $crawler = $this->client->click($link);
         $this->assertEquals(0, $crawler->filter('li')->count());
-
     }
 
-    public function testUpdateCategorie(){
+    public function testUpdateCategorie()
+    {
         $this->client->followRedirects();
         $crawler = $this->client->request('GET', '/Categorie');
 
@@ -146,11 +154,4 @@ class QuoteControllerTest extends WebTestCase
         $crawler = $this->client->submit($form);
         $this->assertEquals(1, $crawler->filter('li:contains("testCUpdate")')->count());
     }
-
-
-
-
-
-
-
 }

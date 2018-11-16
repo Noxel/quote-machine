@@ -34,6 +34,7 @@ class AppFixtures extends Fixture
             $quote = new Quote();
             $quote->setMeta($data->getMeta());
             $quote->setQuote($data->getQuote());
+            $quote->setOwner('user');
             $quote->setCategory($cat);
             $manager->persist($quote);
         }

@@ -48,9 +48,10 @@
         <ul>
             {% for quote in quotes %}
                 <li>{{ quote.quote }}
-                    <i>{{ quote.meta }}</i>
+                    <i>{{ quote.meta }}</i>,
+                    <b>{{ quote.owner }}</b>
                     <br>
-                    {% if is_granted('ROLE_USER') %}
+                    {% if is_granted('delete', quote) %}
                         <a href="{{ path('update_quote' , {id : quote.id}) }}"><input type="button" value="update"></a>
                         <a href="{{ path('delete_quote', {id : quote.id})}}"><input type="button" value="delete"></a>
                     {% endif %}

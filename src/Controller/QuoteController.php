@@ -84,6 +84,7 @@ class QuoteController extends Controller
      */
     public function update(Quote $quote, Request $request)
     {
+        $this->denyAccessUnlessGranted('edit', $quote);
         $quoteRep = $this->getDoctrine()->getManager();
 
         $formAdd = $this->createForm(QuoteType::class, $quote);
@@ -112,6 +113,8 @@ class QuoteController extends Controller
      */
     public function delete(Quote $quote)
     {
+        $this->denyAccessUnlessGranted('delete', $quote);
+
         $quoteRep = $this->getDoctrine()->getManager();
         $quoteRep->remove($quote);
         $quoteRep->flush();
