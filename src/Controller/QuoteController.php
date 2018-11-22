@@ -8,6 +8,7 @@ use App\Form\CategoryType;
 use App\Form\QuoteSearchType;
 use App\Form\QuoteType;
 use App\Util\Slugger;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -59,6 +60,8 @@ class QuoteController extends Controller
 
         if ($formAdd->isSubmitted() && $formAdd->isValid()) {
             $this->denyAccessUnlessGranted('ROLE_USER');
+
+            $quote->setOwner( $this->getUser());
             $quoteRep->persist($quote);
             $quoteRep->flush();
 

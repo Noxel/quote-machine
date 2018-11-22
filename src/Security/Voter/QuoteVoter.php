@@ -42,10 +42,10 @@ class QuoteVoter extends Voter
         // ... (check conditions and return true to grant permission) ...
         switch ($attribute) {
             case 'edit':
-               return $user->getUsername() === $subject->getOwner();
+               return $user === $subject->getOwner();
                 break;
             case 'delete':
-                return $user->getUsername() === $subject->getOwner();
+                return $user === $subject->getOwner();
                 break;
         }
 

@@ -49,7 +49,7 @@
             {% for quote in quotes %}
                 <li>{{ quote.quote }}
                     <i>{{ quote.meta }}</i>,
-                    <b>{{ quote.owner }}</b>
+                    <b>{{ quote.owner.username }}</b>
                     <br>
                     {% if is_granted('delete', quote) %}
                         <a href="{{ path('update_quote' , {id : quote.id}) }}"><input type="button" value="update"></a>

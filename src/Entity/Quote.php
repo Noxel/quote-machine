@@ -36,9 +36,12 @@ class Quote
     private $category;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="quotes")
+     * @ORM\JoinColumn(nullable=false)
      */
     private $Owner;
+
+
 
     public function getId(): ?int
     {
@@ -81,12 +84,12 @@ class Quote
         return $this;
     }
 
-    public function getOwner(): ?string
+    public function getOwner(): ?User
     {
         return $this->Owner;
     }
 
-    public function setOwner(string $Owner): self
+    public function setOwner(?User $Owner): self
     {
         $this->Owner = $Owner;
 

@@ -67,7 +67,7 @@
         {% for quote in quotes %}
             <li>{{ quote.quote }}
                 <i>{{ quote.meta }}</i>,
-                <b>{{ quote.owner }}</b>
+                <b>{{ quote.owner.username }}</b>
                 <a href="{{ path('quotebycategorie_categorie' , {slug : quote.category.slug }) }}">{{ quote.getCategory().getName() }}</a>
                 <br>
                 {% if is_granted('delete', quote) %}
