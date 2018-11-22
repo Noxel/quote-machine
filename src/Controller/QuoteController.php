@@ -4,11 +4,17 @@ namespace App\Controller;
 
 use App\Entity\Category;
 use App\Entity\Quote;
+use App\Event\CreateQuoteEvent;
+use App\Event\UpdateQuoteEvent;
+use App\Event\DeleteQuoteEvent;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use App\EventSubscriber\QuoteSubscriber;
 use App\Form\CategoryType;
 use App\Form\QuoteSearchType;
 use App\Form\QuoteType;
+use App\Service\MessageGenerator;
 use App\Util\Slugger;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -16,6 +22,11 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 class QuoteController extends Controller
 {
+
+    public function __construct(EventDispatcherInterface $dispatcher, LoggerInterface $logger)
+    {
+        $dispatcher->addSubscriber(new QuoteSubscriber($logger));
+    }
 
     /**
      * Methode de recherche en fonction du POST[quote][search]
@@ -46,7 +57,7 @@ class QuoteController extends Controller
     /**
      * @Route("/quotes", name="quotes")
      */
-    public function quote(Request $request)
+    public function quote(Request $request, MessageGenerator $msg,  EventDispatcherInterface $dispatcher)
     {
         $form = $this->createForm(QuoteSearchType::class);
 
@@ -65,10 +76,11 @@ class QuoteController extends Controller
             $quoteRep->persist($quote);
             $quoteRep->flush();
 
+            $event = new CreateQuoteEvent($msg);
+            $dispatcher->dispatch(CreateQuoteEvent::NAME, $event);
 
             $this->addFlash(
-                'notice',
-                'Your add were saved!'
+                'notice',$msg->getMessage()
             );
         }
 
@@ -85,7 +97,7 @@ class QuoteController extends Controller
      * @Route("/Update/{id}", name="update_quote")
      * @IsGranted("ROLE_USER")
      */
-    public function update(Quote $quote, Request $request)
+    public function update(Quote $quote, Request $request, MessageGenerator $msg, EventDispatcherInterface $dispatcher)
     {
         $this->denyAccessUnlessGranted('edit', $quote);
         $quoteRep = $this->getDoctrine()->getManager();
@@ -96,10 +108,12 @@ class QuoteController extends Controller
         if ($formAdd->isSubmitted() && $formAdd->isValid()) {
             $quoteRep->flush();
 
+            $event = new UpdateQuoteEvent($msg);
+            $dispatcher->dispatch(UpdateQuoteEvent::NAME, $event);
 
             $this->addFlash(
                 'notice',
-                'Your update were saved!'
+                $msg->getMessageUpdate()
             );
 
 
@@ -114,7 +128,7 @@ class QuoteController extends Controller
      * @Route("/Delete/{id}", name="delete_quote")
      * @IsGranted("ROLE_USER")
      */
-    public function delete(Quote $quote)
+    public function delete(Quote $quote, MessageGenerator $msg,  EventDispatcherInterface $dispatcher)
     {
         $this->denyAccessUnlessGranted('delete', $quote);
 
@@ -122,9 +136,11 @@ class QuoteController extends Controller
         $quoteRep->remove($quote);
         $quoteRep->flush();
 
+        $event = new DeleteQuoteEvent($msg);
+        $dispatcher->dispatch(DeleteQuoteEvent::NAME, $event);
+
         $this->addFlash(
-            'notice',
-            'Your delete were saved!'
+            'notice',$msg->getMessageDelete()
         );
 
         return $this->redirectToRoute('quotes');
@@ -147,7 +163,7 @@ class QuoteController extends Controller
     /**
      * @Route("/Categorie", name="categorie")
      */
-    public function categorie(Request $request)
+    public function categorie(Request $request, MessageGenerator $msg)
     {
         $catManager = $this->getDoctrine()->getManager();
         $catRep = $this->getDoctrine()->getRepository(Category::class);
@@ -165,8 +181,7 @@ class QuoteController extends Controller
 
 
             $this->addFlash(
-                'notice',
-                'Your add were saved!'
+                'notice',$msg->getMessage()
             );
         }
 
@@ -180,7 +195,7 @@ class QuoteController extends Controller
      * @Route("/UpdateCategorie/{id}", name="update_categorie")
      * @IsGranted("ROLE_ADMIN")
      */
-    public function updateCategorie(Category $cat, Request $request)
+    public function updateCategorie(Category $cat, Request $request, MessageGenerator $msg)
     {
         $quoteRep = $this->getDoctrine()->getManager();
         $formAdd = $this->createForm(CategoryType::class, $cat);
@@ -191,8 +206,7 @@ class QuoteController extends Controller
 
 
             $this->addFlash(
-                'notice',
-                'Your update were saved!'
+                'notice',$msg->getMessage()
             );
 
 
@@ -208,7 +222,7 @@ class QuoteController extends Controller
      * @Route("/CategorieDelete/{id}", name="delete_categorie")
      * @IsGranted("ROLE_ADMIN")
      */
-    public function deleteCategorie(Category $cat)
+    public function deleteCategorie(Category $cat, MessageGenerator $msg)
     {
         $quoteRep = $this->getDoctrine()->getManager();
         foreach ($cat->getQuotes() as $quote) {
@@ -220,8 +234,7 @@ class QuoteController extends Controller
 
 
         $this->addFlash(
-            'notice',
-            'Your delete were saved!'
+            'notice',$msg->getMessage()
         );
 
         return $this->redirectToRoute('categorie');
