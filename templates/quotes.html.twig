@@ -17,7 +17,7 @@
             padding-left: 5px;
 
         }
-        li{
+        .quote {
             border: 1px dashed #222222;
             margin:  5px;
             padding: 20px;
@@ -25,7 +25,7 @@
 
 
         }
-        li a{
+        .quote a{
             margin: 10px;
 
 
@@ -62,10 +62,17 @@
             {{ form_end(form) }}
         </div>
     </div>
+    <select id="mySelect" class="pagination justify-content-end" onChange="document.location.href='{{ path('quotes', {}) }}/1/'+document.getElementById('mySelect').value; ">
+        <option value="1"></option>
+        <option value="10"> 10</option>
+        <option value="50">50</option>
+        <option value="100"> 100</option>
+
+    </select>
     <div>
         <ul>
         {% for quote in quotes %}
-            <li>
+            <li class="quote">
                 {% if is_granted('ROLE_USER') %}
                     <a href="{{ path('quote_up' , {id : quote.id}) }}"><input type="button" value="<"></a>
                 {% endif %}
@@ -87,6 +94,68 @@
             <br>
         {% endfor %}
         </ul>
+        <nav aria-label="Navigation page" style="margin-top: 20px ;">
+
+            <ul class="pagination justify-content-end">
+
+                {% if numberPage < 7 %}
+                    {% for i in 1..numberPage %}
+                        {% if i == actualPage %}
+                            <li class="page-item disabled"><a class="page-link" href="{{ path('quotes', {}) }}/{{ i }}/{{ nombre }}">{{ i }}</a></li>
+                        {% else %}
+                            <li class="page-item"><a class="page-link" href="{{ path('quotes', {}) }}/{{ i }}/{{ nombre }}">{{ i }}</a></li>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+
+                {% if numberPage > 6 %}
+
+                    {% if actualPage < 4  %}
+                        {% for i in 1..4 %}
+                            {% if i == actualPage %}
+                                <li class="page-item disabled"><a class="page-link" href="{{ path('quotes', {}) }}/{{ i }}/{{ nombre }}">{{ i }}</a></li>
+                            {% else %}
+                                <li class="page-item"><a class="page-link" href="{{ path('quotes', {}) }}/{{ i }}/{{ nombre }}">{{ i }}</a></li>
+                            {% endif %}
+                        {% endfor %}
+                        <li class="page-item page-link">...</li>
+                        <li class="page-item"><a class="page-link" href="{{ path('quotes', {}) }}/{{ numberPage }}/{{ nombre }}">{{ numberPage }}</a></li>
+                    {% endif %}
+
+                    {% if actualPage > 3  %}
+                        {%  if numberPage - actualPage > 2 %}
+
+                            <li class="page-item"><a class="page-link" href="{{ path('quotes', {}) }}/1">1</a></li>
+                            <li class="page-item page-link">...</li>
+                            {% for i in (actualPage-1)..(actualPage+1) %}
+                                {% if i == actualPage %}
+                                    <li class="page-item disabled"><a class="page-link" href="{{ path('quotes', {}) }}/{{ i }}/{{ nombre }}">{{ i }}</a></li>
+                                {% else %}
+                                    <li class="page-item"><a class="page-link" href="{{ path('quotes', {}) }}/{{ i }}/{{ nombre }}">{{ i }}</a></li>
+                                {% endif %}
+                            {% endfor %}
+                            <li class="page-item page-link">...</li>
+                            <li class="page-item"><a class="page-link" href="{{ path('quotes', {}) }}/{{ numberPage }}/{{ nombre }}">{{ numberPage }}</a></li>
+                        {% endif %}
+                    {% endif %}
+
+                    {% if numberPage - actualPage < 3  %}
+                        <li class="page-item"><a class="page-link" href="{{ path('quotes', {}) }}/1/{{ nombre }}">1</a></li>
+                        <li class="page-item page-link">...</li>
+                        {% for i in numberPage-3..numberPage %}
+                            {% if i == actualPage %}
+                                <li class="page-item disabled"><a class="page-link" href="{{ path('quotes', {}) }}/{{ i }}/{{ nombre }}">{{ i }}</a></li>
+                            {% else %}
+                                <li class="page-item"><a class="page-link" href="{{ path('quotes', {}) }}/{{ i }}/{{ nombre }}">{{ i }}</a></li>
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+
+                {% endif %}
+
+
+            </ul>
+        </nav>
     </div>
 
 

@@ -51,10 +51,13 @@ class QuoteController extends Controller
 
 
     /**
-     * @Route("/quotes", name="quotes")
+     * @Route("/quotes/{num}/{n}", name="quotes")
      */
-    public function quote(Request $request, MessageGenerator $msg,  EventDispatcherInterface $dispatcher)
+    public function quote(Request $request, MessageGenerator $msg,  EventDispatcherInterface $dispatcher, $num = null, $n = null)
     {
+        $num == null ? $num = 0 : $num = $num-1;
+        $n == null ? $n = 10 : true;
+
         $form = $this->createForm(QuoteSearchType::class);
 
         $quote = new Quote();
@@ -80,12 +83,17 @@ class QuoteController extends Controller
             );
         }
 
+        $quotes = $this->rechercher($request);
+
 
 
         return $this->render('/quotes.html.twig', [
-            'quotes' => $this->rechercher($request),
+            'quotes' => array_slice($quotes, $num * $n, $n),
             'form' => $form->createView(),
-            'formAdd' => $formAdd->createView()
+            'formAdd' => $formAdd->createView(),
+            'numberPage' => ceil (count($quotes) / $n),
+            'actualPage' => $num +1,
+            'nombre' => $n,
         ]);
     }
 
