@@ -40,9 +40,21 @@ class User implements UserInterface
      */
     private $quotes;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Quote", mappedBy="Score")
+     */
+    private $vote;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Score", mappedBy="user", orphanRemoval=true)
+     */
+    private $scores;
+
     public function __construct()
     {
         $this->quotes = new ArrayCollection();
+        $this->vote = new ArrayCollection();
+        $this->scores = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -148,4 +160,37 @@ class User implements UserInterface
 
         return $this;
     }
+
+    /**
+     * @return Collection|Score[]
+     */
+    public function getScores(): Collection
+    {
+        return $this->scores;
+    }
+
+    public function addScore(Score $score): self
+    {
+        if (!$this->scores->contains($score)) {
+            $this->scores[] = $score;
+            $score->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeScore(Score $score): self
+    {
+        if ($this->scores->contains($score)) {
+            $this->scores->removeElement($score);
+            // set the owning side to null (unless already changed)
+            if ($score->getUser() === $this) {
+                $score->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+
 }

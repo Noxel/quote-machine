@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Category;
 use App\Entity\Quote;
+use App\Entity\Score;
 use App\Event\CreateQuoteEvent;
 use App\Event\UpdateQuoteEvent;
 use App\Event\DeleteQuoteEvent;
@@ -249,5 +250,41 @@ class QuoteController extends Controller
             'quotes' => $cat->getQuotes() ,
             'cat' => $cat,
         ]);
+    }
+
+    /**
+     * @Route("/QuoteUp/{id}", name="quote_up" )
+     * @IsGranted("ROLE_USER")
+     */
+    public function upScoreQuote(Quote $quote){
+        $score = $this->getDoctrine()->getRepository(Score::class)->findOneBy(['Quote' => $quote, 'user' => $this->getUser()]);
+        if($score == null){
+            $score = new Score();
+            $score->setQuote($quote);
+            $score->setUser($this->getUser());
+            $this->getDoctrine()->getManager()->persist($score);
+        }
+        $score->up();
+        $this->getDoctrine()->getManager()->flush();
+
+        return $this->redirectToRoute('quotes');
+    }
+
+    /**
+     * @Route("/QuoteDown/{id}", name="quote_down" )
+     * @IsGranted("ROLE_USER")
+     */
+    public function downScoreQuote(Quote $quote){
+        $score = $this->getDoctrine()->getRepository(Score::class)->findOneBy(['Quote' => $quote, 'user' => $this->getUser()]);
+        if($score == null){
+            $score = new Score();
+            $score->setQuote($quote);
+            $score->setUser($this->getUser());
+            $this->getDoctrine()->getManager()->persist($score);
+        }
+        $score->down();
+        $this->getDoctrine()->getManager()->flush();
+
+        return $this->redirectToRoute('quotes');
     }
 }

@@ -65,8 +65,16 @@
     <div>
         <ul>
         {% for quote in quotes %}
-            <li>{{ quote.quote }}
+            <li>
+                {% if is_granted('ROLE_USER') %}
+                    <a href="{{ path('quote_up' , {id : quote.id}) }}"><input type="button" value="<"></a>
+                {% endif %}
+                    <b>{{ quote.getScoreInt }}</b>
+                {% if is_granted('ROLE_USER') %}
+                    <a href="{{ path('quote_down', {id : quote.id})}}"><input type="button" value=">"></a>
+                {% endif %}
 
+                {{ quote.quote }}
                 <i>{{ quote.meta }}</i>,
                 <b>{{ quote.owner.username }}</b>
                 <a href="{{ path('quotebycategorie_categorie' , {slug : quote.category.slug }) }}">{{ quote.getCategory().getName() }}</a>

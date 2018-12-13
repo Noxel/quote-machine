@@ -2,7 +2,10 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use phpDocumentor\Reflection\Types\Integer;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -40,6 +43,22 @@ class Quote
      * @ORM\JoinColumn(nullable=false)
      */
     private $Owner;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\User", inversedBy="vote")
+     */
+    private $Score;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Score", mappedBy="Quote", orphanRemoval=true)
+     */
+    private $scores;
+
+    public function __construct()
+    {
+        $this->Score = new ArrayCollection();
+        $this->scores = new ArrayCollection();
+    }
 
 
 
@@ -95,4 +114,45 @@ class Quote
 
         return $this;
     }
+
+    /**
+     * @return Collection|Score[]
+     */
+    public function getScores(): Collection
+    {
+        return $this->scores;
+    }
+
+    public function addScore(Score $score): self
+    {
+        if (!$this->scores->contains($score)) {
+            $this->scores[] = $score;
+            $score->setQuote($this);
+        }
+
+        return $this;
+    }
+
+    public function removeScore(Score $score): self
+    {
+        if ($this->scores->contains($score)) {
+            $this->scores->removeElement($score);
+            // set the owning side to null (unless already changed)
+            if ($score->getQuote() === $this) {
+                $score->setQuote(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getScoreInt(): ?int{
+        $res = 0;
+        foreach ( $this->scores as $score){
+            $res+= $score->getScore();
+        }
+        return $res;
+    }
+
+
 }
