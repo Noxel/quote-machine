@@ -9,6 +9,8 @@ use App\Entity\User;
 
 class UserFixture extends Fixture
 {
+    public const USER_REFERENCE ='user';
+
     private $passwordEncoder;
 
     public function __construct(UserPasswordEncoderInterface $passwordEncoder)
@@ -19,6 +21,18 @@ class UserFixture extends Fixture
     public function load(ObjectManager $manager)
     {
 
+        $user = new User();
+        $user->setUsername('user');
+        $user->setRoles(['ROLE_USER']);
+
+        $user->setPassword($this->passwordEncoder->encodePassword(
+            $user,
+            'user'
+        ));
+
+        $manager->persist($user);
+
+        $this->addReference(self::USER_REFERENCE, $user);
 
         $user2 = new User();
         $user2->setUsername('user2');

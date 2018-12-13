@@ -23,10 +23,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 class QuoteController extends Controller
 {
 
-    public function __construct(EventDispatcherInterface $dispatcher, LoggerInterface $logger)
-    {
-        $dispatcher->addSubscriber(new QuoteSubscriber($logger));
-    }
+
 
     /**
      * Methode de recherche en fonction du POST[quote][search]

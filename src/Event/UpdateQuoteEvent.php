@@ -10,14 +10,7 @@ class UpdateQuoteEvent extends Event
 {
     const NAME = 'update.quote';
 
-    protected $msg;
-
-    public function __construct(MessageGenerator $msg)
-    {
-        $this->msg = $msg->getMessageUpdate();
-    }
-
     public function getMessage(){
-        return $this->msg;
+        return 'Update';
     }
 }

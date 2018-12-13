@@ -12,38 +12,19 @@ use App\Entity\Category;
 use App\Entity\User;
 use App\Entity\Quote;
 use App\Util\Slugger;
+use App\DataFixtures\UserFixture;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\Normalizer\ArrayDenormalizer;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
-class AppFixtures extends Fixture
+class AppFixtures extends Fixture implements DependentFixtureInterface
 {
-
-    private $passwordEncoder;
-
-    public function __construct(UserPasswordEncoderInterface $passwordEncoder)
-    {
-        $this->passwordEncoder = $passwordEncoder;
-    }
-
     public function load(ObjectManager $manager)
     {
-
-        $user = new User();
-        $user->setUsername('user');
-        $user->setRoles(['ROLE_USER']);
-
-        $user->setPassword($this->passwordEncoder->encodePassword(
-            $user,
-            'user'
-        ));
-
-        $manager->persist($user);
-
         $serialier = new Serializer([new GetSetMethodNormalizer(), new ArrayDenormalizer()], [new JsonEncoder()]);
         $datas = $serialier->deserialize(file_get_contents('var/quotes.json'), 'App\Entity\Quote[]', 'json');
 
@@ -56,11 +37,18 @@ class AppFixtures extends Fixture
             $quote = new Quote();
             $quote->setMeta($data->getMeta());
             $quote->setQuote($data->getQuote());
-            $quote->setOwner($user);
+            $quote->setOwner($this->getReference(UserFixture::USER_REFERENCE));
             $quote->setCategory($cat);
             $manager->persist($quote);
         }
 
         $manager->flush();
+    }
+
+    public function getDependencies()
+    {
+        return array(
+            UserFixture::class,
+        );
     }
 }

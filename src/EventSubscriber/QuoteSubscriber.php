@@ -9,14 +9,17 @@ use App\Event\UpdateQuoteEvent;
 use App\Event\CreateQuoteEvent;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use App\Service\MessageGenerator;
 
 class QuoteSubscriber implements EventSubscriberInterface
 {
     private $logger;
+    private $msg;
 
-    public function __construct(LoggerInterface $logger)
+    public function __construct(LoggerInterface $logger, MessageGenerator $msg)
     {
         $this->logger = $logger;
+        $this->msg = $msg;
 
     }
 
@@ -30,16 +33,16 @@ class QuoteSubscriber implements EventSubscriberInterface
     }
 
     public  function onDeleteQuote(DeleteQuoteEvent $event){
-        $this->logger->info($event->getMessage());
+        $this->logger->info($this->msg->getMessageDelete());
 
     }
     public  function onUpdateQuote(UpdateQuoteEvent $event){
-        $this->logger->critical($event->getMessage());
+        $this->logger->critical($this->msg->getMessageUpdate());
 
 
     }
     public  function onCreateQuote(CreateQuoteEvent $event){
-        $this->logger->debug($event->getMessage());
+        $this->logger->debug($this->msg->getMessage());
 
     }
 }
