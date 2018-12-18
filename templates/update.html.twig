@@ -1,20 +1,21 @@
 {%  extends "base.html.twig" %}
-{% block stylesheets %}
-    <style type="text/css">
-    input{
-        width: 1000px;
-        height: 50px;
-
-    }
-    </style>
-
-{% endblock %}
 {% block body %}
-<div>
-    <div >
-        {{ form_start(formAdd) }}
-        {{ form_widget(formAdd) }}
+    <div class="container" >
+        {{ form_start(formAdd, {'attr':{'style' : 'margin-top: 10px'}}) }}
+            <div class="form-group">
+                <label class="badge badge-secondary">Quote</label>
+                {{ form_row(formAdd.quote, {'attr': {'class':'form-control ','placeholder': 'Quote'}}) }}
+            </div>
+            <div class="form-group">
+                <label class="badge badge-secondary">Meta</label>
+                {{ form_row(formAdd.meta,{'attr': {'class':'form-control ','placeholder': 'Meta'}}) }}
+            </div>
+            <div class="form-group">
+                <label class="badge badge-secondary">Category</label>
+                {{ form_row(formAdd.category,{'attr': {'class':'form-control '}}) }}
+            </div>
+            {{ form_row(formAdd.submit, {'attr': {'class':'btn btn-outline-info '}}) }}
+
         {{ form_end(formAdd) }}
     </div>
-</div>
 {% endblock %}

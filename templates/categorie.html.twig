@@ -1,64 +1,35 @@
 {%  extends "base.html.twig" %}
-{% block stylesheets %}
-    <style type="text/css">
-        .header{
-            overflow: hidden;
-            background-color: #f1f1f1;
-            padding: 20px 10px;
-        }
-
-        .header div {
-            float: left;
-            padding-left: 5px;
-
-        }
-        .header a{
-            float: left;
-            padding-left: 5px;
-
-        }
-        li{
-            border: 1px dashed #222222;
-            margin:  5px;
-            padding: 20px;
-            list-style: none;
-
-
-        }
-        li a{
-            margin: 10px;
-
-
-        }
-
-
-    </style>
-
-{% endblock %}
 {% block body %}
-
-
-
-    <div class="header">
-        <a href="{{ path('quotes', {})}}"><input type="button" value="Quotes"></a>
-        {% if is_granted('ROLE_ADMIN') %}
-            <div >
-                {{ form_start(formAdd) }}
-                {{ form_widget(formAdd) }}
-                {{ form_end(formAdd) }}
+    {% if is_granted('ROLE_ADMIN') %}
+        <div class="container  ">
+            {{ form_start(formAdd, {'attr':{'class':'form-row', 'style' : 'margin-top: 10px'}}) }}
+            <div class="col">
+                <h5>Nouvelle Categorie</h5>
             </div>
-        {% endif %}
-    </div>
-    <div>
+            <div class="col ">
+                {{ form_row(formAdd.name, {'attr': {'class':'form-control mr-sm-2 ','placeholder': 'Categorie'}}) }}
+            </div>
+
+            {{ form_row(formAdd.submit, {'attr': {'class':'btn btn-outline-info my-2 my-sm-0 '}}) }}
+
+            {{ form_end(formAdd) }}
+        </div>
+    {% endif %}
+
+    <div class="container " style="margin-top: 10px;">
         <ul>
             {% for cat in cats %}
-                <li><a href="{{ path('quotebycategorie_categorie' , {slug : cat.slug}) }}">{{ cat.name }}</a>
-                    {% if is_granted('ROLE_ADMIN') %}
-                        <a href="{{ path('update_categorie' , {id : cat.id}) }}"><input type="button" value="update"></a>
-                        <a href="{{ path('delete_categorie', {id : cat.id})}}"><input type="button" value="delete"></a>
-                    {% endif %}
+                <li class="row list-group-item d-flex list-group-item-dark ">
+                    <div class="col-8">
+                        <a class="nav-link" href="{{ path('quotebycategorie_categorie' , {slug : cat.slug }) }}"><span class="badge badge-pill badge-info">{{ cat.slug }}</span>  {{  cat.name  }}</a>
+                    </div>
+                    <div class="col-2 ">
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <a class="btn btn-success"  href="{{ path('update_categorie' , {id : cat.id}) }}">Edit</a>
+                            <a  class="btn btn-danger"  href="{{ path('delete_categorie', {id : cat.id})}}">&#10008;</a>
+                        {% endif %}
+                    </div>
                 </li>
-                <br>
             {% endfor %}
         </ul>
     </div>

@@ -1,64 +1,38 @@
 {%  extends "base.html.twig" %}
-{% block stylesheets %}
-    <style type="text/css">
-        .header{
-            overflow: hidden;
-            background-color: #f1f1f1;
-            padding: 20px 10px;
-        }
-
-        .header div {
-            float: left;
-            padding-left: 5px;
-
-        }
-        .header a{
-            float: left;
-            padding-left: 5px;
-
-        }
-        li{
-            border: 1px dashed #222222;
-            margin:  5px;
-            padding: 20px;
-            list-style: none;
-
-
-        }
-        li a{
-            margin: 10px;
-
-
-        }
-
-
-    </style>
-
-{% endblock %}
 {% block body %}
 
-    <div class="header">
-
-        <a href="{{ path('categorie', {})}}"><input type="button" value="Categorie"></a>
-        <a href="{{ path('quotes', {})}}"><input type="button" value="Quotes"></a>
-
-    </div>
-    <div>
-        <h1>{{ cat.name }} </h1>
+    <div class="container ">
+        <h1 class="col" style="margin-top: 10px; margin-bottom: 10px">{{ cat.name }} </h1>
         <ul>
             {% for quote in quotes %}
-                <li>{{ quote.quote }}
-                    <i>{{ quote.meta }}</i>,
-                    <b>{{ quote.owner.username }}</b>
-                    <br>
-                    {% if is_granted('delete', quote) %}
-                        <a href="{{ path('update_quote' , {id : quote.id}) }}"><input type="button" value="update"></a>
-                        <a href="{{ path('delete_quote', {id : quote.id})}}"><input type="button" value="delete"></a>
-                    {% endif %}
+                <li class="row list-group-item d-flex list-group-item-dark ">
+                    <div class="col-2 justify-content-center ">
+                        {% if is_granted('ROLE_USER') %}
+                            <a  class="row btn btn-primary" href="{{ path('quote_up' , {id : quote.id}) }}">/\</a>
+                        {% endif %}
+                        <b class="row align-middle" style="margin-left: auto">{{ quote.getScoreInt }}</b>
+                        {% if is_granted('ROLE_USER') %}
+                            <a class="row btn btn-danger" href="{{ path('quote_down', {id : quote.id})}}">\/</a>
+                        {% endif %}
+                    </div>
+                    <div class="col-8">
+                        <a href="{{ path('quotebycategorie_categorie' , {slug : quote.category.slug }) }}"><span class="badge badge-pill badge-info">{{ quote.category.name }}</span></a>
+                        <p> {{ quote.quote }}
+                            <i>{{ quote.meta }}</i>
+                        </p>
+                        <b>{{ quote.owner.username }}</b>
+
+                    </div>
+                    <div class="col-2 ">
+                        {% if is_granted('delete', quote) %}
+                            <a class="btn btn-success"  href="{{ path('update_quote' , {id : quote.id}) }}">Edit</a>
+                            <a  class="btn btn-danger"  href="{{ path('delete_quote', {id : quote.id})}}">&#10008;</a>
+                        {% endif %}
+                    </div>
                 </li>
-                <br>
             {% endfor %}
         </ul>
+
     </div>
 
 

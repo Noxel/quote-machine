@@ -13,7 +13,9 @@ class QuoteSearchType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $option)
     {
         $builder
-            ->add('search', TextType::class)
+            ->add('search', TextType::class, array(
+                'label' => ' '
+            ))
             ->add('load', SubmitType::class);
     }
 }

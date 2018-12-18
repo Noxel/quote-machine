@@ -14,9 +14,13 @@ class QuoteType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $option)
     {
         $builder
-            ->add('quote', TextType::class)
-            ->add('meta', TextType::class)
-            ->add('category', EntityType::class, array("class" => Category::class, "choice_label" => 'name'))
+            ->add('quote', TextType::class, array(
+                'label' => false
+            ))
+            ->add('meta', TextType::class, array(
+                'label' => false
+            ))
+            ->add('category', EntityType::class, array("class" => Category::class, "choice_label" => 'name', 'label' => false))
             ->add('submit', SubmitType::class);
     }
 }

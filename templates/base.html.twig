@@ -2,17 +2,44 @@
 <html>
     <head>
         <meta charset="UTF-8">
+        <link rel="icon" href="https://img.icons8.com/dusk/64/000000/bookmark.png" type="image/png" >
         <title>{% block title %}Welcome!{% endblock %}</title>
         {{ encore_entry_link_tags('app') }}
         {% block stylesheets %}{% endblock %}
 
     </head>
     <body>
+        <div class="navbar navbar-expand-lg navbar-dark bg-dark">
+            {% block nav %}
+                <div class="collapse navbar-collapse">
+                    <ul class="navbar-nav mr-auto">
+                        {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ path('app_logout', {})}}">Logout</a>
+                            </li>
+                        {% else %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ path('app_login', {})}}">Login</a>
+                            </li>
+                        {%  endif %}
+                        <li class="nav-item">
+                            <a class="nav-link"  href="{{ path('quotes', {})}}">Quotes</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('categorie', {})}}">Categorie</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('random_quote', {})}}">Random</a>
+                        </li>
+                    </ul>
+                </div>
+            {% endblock %}
+        </div>
         {% block body %}{% endblock %}
         {% block javascripts %}{% endblock %}
 
         {% for message in app.flashes('notice') %}
-            <div class="flash-notice">
+            <div class="alert alert-info fixed-bottom" role="alert">
                 {{ message }}
             </div>
         {% endfor %}

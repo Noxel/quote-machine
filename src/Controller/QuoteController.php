@@ -49,6 +49,13 @@ class QuoteController extends Controller
     }
 
 
+    /**
+     * @Route("/", name="index")
+     */
+    public function index(){
+        return $this->redirectToRoute('quotes');
+    }
+
 
     /**
      * @Route("/quotes/{num}/{n}", name="quotes")
@@ -217,7 +224,7 @@ class QuoteController extends Controller
             return $this->redirectToRoute('categorie');
         }
 
-        return $this->render('/update.html.twig', [
+        return $this->render('/updateCat.html.twig', [
             'formAdd' => $formAdd->createView(),
         ]);
     }

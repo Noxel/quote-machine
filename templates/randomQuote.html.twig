@@ -1,21 +1,17 @@
 {%  extends "base.html.twig" %}
-{% block stylesheets %}
-    <style type="text/css">
-        input{
-            margin: 2px;
-
-        }
-    </style>
-
-{% endblock %}
 {% block body %}
-<div>
-    <a href="{{ path('quotes', {})}}"><input type="button" value="Back"></a>
+    <div class="container">
+        <li class="row list-group-item d-flex list-group-item-dark " style="margin-top: 10px">
+            <div class="col-8">
+                <a href="{{ path('quotebycategorie_categorie' , {slug : quote.category.slug }) }}"><span class="badge badge-pill badge-info">{{ quote.category.name }}</span></a>
+                <p> {{ quote.quote }}
+                    <i>{{ quote.meta }}</i>
+                </p>
+                <b>{{ quote.owner.username }}</b>
 
-    <div >
-        {{ quote.quote }}
-        <i>{{ quote.meta }}</i>,
-        <b>{{ quote.owner.username }}</b>
+            </div>
+
+        </li>
     </div>
 </div>
 {% endblock %}

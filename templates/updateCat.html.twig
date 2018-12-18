@@ -1,0 +1,12 @@
+{%  extends "base.html.twig" %}
+{% block body %}
+    <div class="container" >
+        {{ form_start(formAdd, {'attr':{'style' : 'margin-top: 10px'}}) }}
+        <div class="form-group">
+            <label class="badge badge-secondary">Quote</label>
+            {{ form_row(formAdd.name, {'attr': {'class':'form-control mr-sm-2 ','placeholder': 'Categorie'}}) }}
+        </div>
+            {{ form_row(formAdd.submit, {'attr': {'class':'btn btn-outline-info my-2 my-sm-0 '}}) }}
+        {{ form_end(formAdd) }}
+    </div>
+{% endblock %}

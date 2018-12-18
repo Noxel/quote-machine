@@ -26,7 +26,7 @@ class AppFixtures extends Fixture implements DependentFixtureInterface
     public function load(ObjectManager $manager)
     {
         $serialier = new Serializer([new GetSetMethodNormalizer(), new ArrayDenormalizer()], [new JsonEncoder()]);
-        $datas = $serialier->deserialize(file_get_contents('var/quotes.json'), 'App\Entity\Quote[]', 'json');
+        $datas = $serialier->deserialize(file_get_contents('./quotes.json'), 'App\Entity\Quote[]', 'json');
 
         $cat = new Category();
         $cat->setName("Category de quotes");

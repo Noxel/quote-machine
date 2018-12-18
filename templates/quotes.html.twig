@@ -1,97 +1,82 @@
 {%  extends "base.html.twig" %}
-{% block stylesheets %}
-    <style type="text/css">
-        .header{
-            overflow: hidden;
-            background-color: #f1f1f1;
-            padding: 20px 10px;
-            }
-
-        .header div {
-            float: left;
-            padding-left: 5px;
-
-        }
-        .header a{
-            float: left;
-            padding-left: 5px;
-
-        }
-        .quote {
-            border: 1px dashed #222222;
-            margin:  5px;
-            padding: 20px;
-            list-style: none;
-
-
-        }
-        .quote a{
-            margin: 10px;
-
-
-        }
-
-
-    </style>
-
-{% endblock %}
 {% block body %}
-    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-        <a href="{{ path('app_logout', {})}}"><input type="button" value="Logout"></a>
-
-    {% else %}
-        <a href="{{ path('app_login', {})}}"><input type="button" value="Login"></a>
-
-    {%  endif %}
-      <div class="header">
-
-        <a href="{{ path('categorie', {})}}"><input type="button" value="Categorie"></a>
-        <a href="{{ path('random_quote', {})}}"><input type="button" value="Random"></a>
+   {% block nav %}
+       {{ parent() }}
+        {{ form_start(form, {'attr':{'class':'form-inline'}}) }}
+            {{ form_row(form.search, {'attr': {'class':'form-control mr-sm-2','placeholder': 'Search'}}) }}
+            {{ form_row(form.load, {'attr': {'class':'btn btn-outline-info my-2 my-sm-0'}}) }}
+        {{ form_end(form) }}
+   {% endblock %}
+    <div>
 
           {% if is_granted('ROLE_USER') %}
-            <div >
-                {{ form_start(formAdd) }}
-                {{ form_widget(formAdd) }}
+            <div class="container  ">
+                {{ form_start(formAdd, {'attr':{'class':'form-row', 'style' : 'margin-top: 10px'}}) }}
+                    <div class="col">
+                        <h5>Nouvelle quote</h5>
+                    </div>
+                    <div class="col ">
+                        {{ form_row(formAdd.quote, {'attr': {'class':'form-control mr-sm-2 ','placeholder': 'Quote'}}) }}
+                    </div>
+                    <div class="col">
+                        {{ form_row(formAdd.meta,{'attr': {'class':'form-control mr-sm-2 ','placeholder': 'Meta'}}) }}
+                    </div>
+                    <div class="col ">
+                        {{ form_row(formAdd.category,{'attr': {'class':'form-control mr-sm-2 e'}}) }}
+                    </div>
+
+                    {{ form_row(formAdd.submit, {'attr': {'class':'btn btn-outline-info my-2 my-sm-0 '}}) }}
+
                 {{ form_end(formAdd) }}
             </div>
           {% endif %}
 
-        <div >
-            {{ form_start(form) }}
-            {{ form_widget(form) }}
-            {{ form_end(form) }}
-        </div>
-    </div>
-    <select id="mySelect" class="pagination justify-content-end" onChange="document.location.href='{{ path('quotes', {}) }}/1/'+document.getElementById('mySelect').value; ">
-        <option value="1"></option>
-        <option value="10"> 10</option>
-        <option value="50">50</option>
-        <option value="100"> 100</option>
 
-    </select>
-    <div>
+    </div>
+
+
+
+    <div class="container ">
+        <select id="mySelect" class=" custom-select col-1  pagination" style="margin-left: auto; margin-right: auto; margin-top: 10px; margin-bottom: 10px" onChange="document.location.href='{{ path('quotes', {}) }}/1/'+document.getElementById('mySelect').value; ">
+
+            <option value="10" {% if nombre == 10 %} selected {% endif %}> 10</option>
+            <option value="50" {% if nombre == 50 %} selected {% endif %}>50</option>
+            <option value="100" {% if nombre == 100 %} selected {% endif %}> 100</option>
+
+        </select>
         <ul>
         {% for quote in quotes %}
-            <li class="quote">
-                {% if is_granted('ROLE_USER') %}
-                    <a href="{{ path('quote_up' , {id : quote.id}) }}"><input type="button" value="<"></a>
-                {% endif %}
-                    <b>{{ quote.getScoreInt }}</b>
-                {% if is_granted('ROLE_USER') %}
-                    <a href="{{ path('quote_down', {id : quote.id})}}"><input type="button" value=">"></a>
-                {% endif %}
+            <li class="row list-group-item d-flex list-group-item-dark ">
+                <div class="col-2 justify-content-center ">
+                    {% if is_granted('ROLE_USER') %}
+                        <a  class="row btn btn-primary" href="{{ path('quote_up' , {id : quote.id}) }}">/\</a>
+                    {% else %}
+                        <a  class="row btn btn-primary disabled" href="#">/\</a>
+                    {% endif %}
 
-                {{ quote.quote }}
-                <i>{{ quote.meta }}</i>,
-                <b>{{ quote.owner.username }}</b>
-                <a href="{{ path('quotebycategorie_categorie' , {slug : quote.category.slug }) }}">{{ quote.getCategory().getName() }}</a>
-                <br>
+                        <b class="row align-middle" style="margin-left: auto">{{ quote.getScoreInt }}</b>
+
+                    {% if is_granted('ROLE_USER') %}
+                        <a class="row btn btn-danger" href="{{ path('quote_down', {id : quote.id})}}">\/</a>
+                    {% else %}
+                        <a class="row btn btn-danger disabled" href="#">\/</a>
+                    {% endif %}
+                </div>
+                <div class="col-8">
+                    <a href="{{ path('quotebycategorie_categorie' , {slug : quote.category.slug }) }}"><span class="badge badge-pill badge-info">{{ quote.category.name }}</span></a>
+                    <p> {{ quote.quote }}
+                        <i>{{ quote.meta }}</i>
+                    </p>
+                    <b>{{ quote.owner.username }}</b>
+
+                </div>
+                <div class="col-2 ">
                 {% if is_granted('delete', quote) %}
-                    <a href="{{ path('update_quote' , {id : quote.id}) }}"><input type="button" value="update"></a>
-                    <a href="{{ path('delete_quote', {id : quote.id})}}"><input type="button" value="delete"></a>
+                    <a class="btn btn-success"  href="{{ path('update_quote' , {id : quote.id}) }}">Edit</a>
+                    <a  class="btn btn-danger"  href="{{ path('delete_quote', {id : quote.id})}}">&#10008;</a>
                 {% endif %}
+                </div>
             </li>
-            <br>
         {% endfor %}
         </ul>
         <nav aria-label="Navigation page" style="margin-top: 20px ;">
