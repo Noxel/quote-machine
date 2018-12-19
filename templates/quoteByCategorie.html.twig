@@ -4,7 +4,7 @@
     <div class="container ">
 
         <h1 class="col" style="margin-top: 10px; margin-bottom: 10px">{{ cat.name }} </h1>
-        <select id="mySelect" class=" custom-select col-1  pagination" style="margin-left: auto; margin-right: auto; margin-top: 10px; margin-bottom: 10px" onChange="document.location.href='{{ path('quotes', {}) }}/1/'+document.getElementById('mySelect').value; ">
+        <select id="mySelect" class=" custom-select col-1  pagination" style="margin-left: auto; margin-right: auto; margin-top: 10px; margin-bottom: 10px" onChange="document.location.href='{{ path('quotebycategorie_categorie', {slug : slug }) }}/1/'+document.getElementById('mySelect').value; ">
 
             <option value="10" {% if nombre == 10 %} selected {% endif %}> 10</option>
             <option value="50" {% if nombre == 50 %} selected {% endif %}>50</option>
