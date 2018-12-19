@@ -69,7 +69,7 @@ http://localhost:8000
 
   This command allows you to show a quote, you can chose between each category or none.
   
-#
+***
 
 _ARESCALDINO
 Clément_ 
