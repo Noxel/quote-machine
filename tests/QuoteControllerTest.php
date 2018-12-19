@@ -27,7 +27,7 @@ class QuoteControllerTest extends WebTestCase
     public function testCreationQuote()
     {
         $this->client->followRedirects();
-        $crawler = $this->client->request('GET', '/quotes');
+        $crawler = $this->client->request('GET', '/quotes/1/100');
 
         //Creation quote
         $form = $crawler->selectButton('Submit')->form();
@@ -45,7 +45,7 @@ class QuoteControllerTest extends WebTestCase
     public function testDeleteQuote()
     {
         $this->client->followRedirects();
-        $crawler = $this->client->request('GET', '/quotes');
+        $crawler = $this->client->request('GET', '/quotes/1/100');
 
         //Delete Quote
         $num = $crawler->filter('a:contains("Category de quotes")')->count();
@@ -78,25 +78,26 @@ class QuoteControllerTest extends WebTestCase
         $crawler = $this->client->request('GET', '/quotes');
 
         //Quote d'une category
-        $num = $crawler->filter('li')->count();
+        $num = $crawler->filter('b:contains("user")')->count();
         $link = $crawler->filter('a[href^="/QuoteByCategorie"]')->eq(1)->link();
         $crawler = $this->client->click($link);
+
         //verification du bon nombre de quote dans la category
-        $this->assertEquals($num, $crawler->filter('li')->count());
+        $this->assertEquals($num, $crawler->filter('b:contains("user")')->count());
     }
 
     public function testSearchQuote()
     {
         $this->client->followRedirects();
-        $crawler = $this->client->request('GET', '/quotes');
+        $crawler = $this->client->request('GET', '/quotes/1/100');
 
         //Search Quote
-        $num = $crawler->filter('li:contains("testQ")')->count();
+        $num = $crawler->filter('p:contains("Sire, Sire")')->count();
         $form = $crawler->selectButton('Load')->form();
-        $form['quote_search[search]'] = 'testQ';
+        $form['quote_search[search]'] = 'Sire, Sire';
         $crawler = $this->client->submit($form);
         //Verification que l'on obtien bien le bon nombre de quote avec la recherche
-        $this->assertEquals($num, $crawler->filter('li')->count());
+        $this->assertEquals($num, $crawler->filter('b:contains("user")')->count());
     }
 
     public function testQuoteRandom()
@@ -115,7 +116,7 @@ class QuoteControllerTest extends WebTestCase
         $crawler = $this->client->request('GET', '/Categorie');
 
         //Liste Categorie
-        $this->assertEquals(1, $crawler->filter('li')->count());
+        $this->assertEquals(1, $crawler->filter('span')->count());
     }
 
     public function testCreationCategorie()
@@ -138,7 +139,7 @@ class QuoteControllerTest extends WebTestCase
         //Delete Categorie
         $link = $crawler->filter('a[href^="/CategorieDelete"]')->first()->link();
         $crawler = $this->client->click($link);
-        $this->assertEquals(0, $crawler->filter('li')->count());
+        $this->assertEquals(0, $crawler->filter('span')->count());
     }
 
     public function testUpdateCategorie()
