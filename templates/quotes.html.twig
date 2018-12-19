@@ -49,7 +49,7 @@
             <li class="row list-group-item d-flex list-group-item-dark ">
                 <div class="col-2 justify-content-center ">
                     {% if is_granted('ROLE_USER') %}
-                        <a  class="row btn btn-primary" href="{{ path('quote_up' , {id : quote.id}) }}">/\</a>
+                        <a  class="row btn btn-primary" href="{{ path('quote_up' , {id : quote.id, red: 'quote'}) }}">/\</a>
                     {% else %}
                         <a  class="row btn btn-primary disabled" href="#">/\</a>
                     {% endif %}
@@ -57,7 +57,7 @@
                         <b class="row align-middle" style="margin-left: auto">{{ quote.getScoreInt }}</b>
 
                     {% if is_granted('ROLE_USER') %}
-                        <a class="row btn btn-danger" href="{{ path('quote_down', {id : quote.id})}}">\/</a>
+                        <a class="row btn btn-danger" href="{{ path('quote_down', {id : quote.id, red: 'quote'})}}">\/</a>
                     {% else %}
                         <a class="row btn btn-danger disabled" href="#">\/</a>
                     {% endif %}

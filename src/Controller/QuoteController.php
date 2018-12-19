@@ -47,6 +47,10 @@ class QuoteController extends Controller
 
         return $quotes;
     }
+    function cmp($a, $b){
+        if($a->getScoreInt() == $b->getScoreInt()) return 0;
+        return $a->getScoreInt() < $b->getScoreInt() ? 1 : -1;
+    }
 
 
     /**
@@ -91,6 +95,8 @@ class QuoteController extends Controller
         }
 
         $quotes = $this->rechercher($request);
+
+        uasort($quotes, array($this,'cmp'));
 
 
 
@@ -139,7 +145,7 @@ class QuoteController extends Controller
      * @Route("/Delete/{id}", name="delete_quote")
      * @IsGranted("ROLE_USER")
      */
-    public function delete(Quote $quote, MessageGenerator $msg,  EventDispatcherInterface $dispatcher)
+    public function delete(Quote $quote, MessageGenerator $msg,  EventDispatcherInterface $dispatcher, Request $request)
     {
         $this->denyAccessUnlessGranted('delete', $quote);
 
@@ -153,8 +159,9 @@ class QuoteController extends Controller
         $this->addFlash(
             'notice',$msg->getMessageDelete()
         );
+        $referer = $request->headers->get('referer');
 
-        return $this->redirectToRoute('quotes');
+        return $this->redirect($referer);
     }
 
     /**
@@ -233,7 +240,7 @@ class QuoteController extends Controller
      * @Route("/CategorieDelete/{id}", name="delete_categorie")
      * @IsGranted("ROLE_ADMIN")
      */
-    public function deleteCategorie(Category $cat, MessageGenerator $msg)
+    public function deleteCategorie(Category $cat, MessageGenerator $msg, Request $request)
     {
         $quoteRep = $this->getDoctrine()->getManager();
         foreach ($cat->getQuotes() as $quote) {
@@ -248,7 +255,9 @@ class QuoteController extends Controller
             'notice',$msg->getMessage()
         );
 
-        return $this->redirectToRoute('categorie');
+        $referer = $request->headers->get('referer');
+
+        return $this->redirect($referer);
     }
 
     /**
@@ -257,10 +266,13 @@ class QuoteController extends Controller
     public function quoteByCategorie($slug)
     {
         $cat = $this->getDoctrine()->getRepository(Category::class)->findOneBy(['slug'=>$slug]);
+        $quotes = $cat->getQuotes()->toArray();
+
+        uasort($quotes, array($this,'cmp'));
 
 
         return $this->render('/quoteByCategorie.html.twig', [
-            'quotes' => $cat->getQuotes() ,
+            'quotes' => $quotes ,
             'cat' => $cat,
         ]);
     }
@@ -269,7 +281,7 @@ class QuoteController extends Controller
      * @Route("/QuoteUp/{id}", name="quote_up" )
      * @IsGranted("ROLE_USER")
      */
-    public function upScoreQuote(Quote $quote){
+    public function upScoreQuote(Quote $quote, Request $request){
         $score = $this->getDoctrine()->getRepository(Score::class)->findOneBy(['Quote' => $quote, 'user' => $this->getUser()]);
         if($score == null){
             $score = new Score();
@@ -280,14 +292,16 @@ class QuoteController extends Controller
         $score->up();
         $this->getDoctrine()->getManager()->flush();
 
-        return $this->redirectToRoute('quotes');
+        $referer = $request->headers->get('referer');
+
+        return $this->redirect($referer);
     }
 
     /**
-     * @Route("/QuoteDown/{id}", name="quote_down" )
+     * @Route("/QuoteDown/{id}/{red}", name="quote_down" )
      * @IsGranted("ROLE_USER")
      */
-    public function downScoreQuote(Quote $quote){
+    public function downScoreQuote(Quote $quote, Request $request){
         $score = $this->getDoctrine()->getRepository(Score::class)->findOneBy(['Quote' => $quote, 'user' => $this->getUser()]);
         if($score == null){
             $score = new Score();
@@ -298,6 +312,9 @@ class QuoteController extends Controller
         $score->down();
         $this->getDoctrine()->getManager()->flush();
 
-        return $this->redirectToRoute('quotes');
+
+        $referer = $request->headers->get('referer');
+
+        return $this->redirect($referer);
     }
 }
