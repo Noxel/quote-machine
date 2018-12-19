@@ -11,6 +11,7 @@
 
 
 Définir L’URL de la DATABASE :
+
  **/.env**
 > DATABASE_URL=mysql://db_user:db_password@127.0.0.1:3306/db_name
 
@@ -22,7 +23,9 @@ Définir L’URL de la DATABASE :
 http://localhost:8000
 
 ## Fonctionnalité
+
 ### Quote
+
  1. Création lier a un utilisateur qui pourras la supprimer ou la modifier (Voter).
  2. Vote positif ou négatif, un vote par utilisateur, ce qui trie les quote.
  3. On peut demander une quote aléatoire. 
@@ -30,6 +33,7 @@ http://localhost:8000
  5. On peut également faire une rechercher dans la liste des quote.
  
  ### Catégorie 
+ 
  1. Les catégorie sont lister on peut voir le slug de chaque catégorie.
  2. Les quote sont relier a des catégorie.
  3. Les catégorie ne sont éditable que par les admin.
@@ -50,19 +54,24 @@ http://localhost:8000
     php bin/console app:quote-random -c
 
 **Description:**
+
   Show a random quote.
 
 **Usage:**
  > app:quote-random [options]
 
 **Options:**
+
   -c, --category        diplay the category choice
   -h, --help            Display this help message
 
 **Help:**
+
   This command allows you to show a quote, you can chose between each category or none.
+  
 #
+
 _ARESCALDINO
 Clément_ 
 
-LPWIMSI : 2018 - 2019
+**LPWIMSI** : 2018 - 2019
