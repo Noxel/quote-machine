@@ -49,7 +49,7 @@
             <li class="row list-group-item d-flex list-group-item-dark ">
                 <div class="col-2 justify-content-center ">
                     {% if is_granted('ROLE_USER') %}
-                        <a  class="row btn btn-primary" href="{{ path('quote_up' , {id : quote.id, red: 'quote'}) }}">/\</a>
+                        <a  class="row btn btn-primary" href="{{ path('quote_up' , {id : quote.id}) }}">/\</a>
                     {% else %}
                         <a  class="row btn btn-primary disabled" href="#">/\</a>
                     {% endif %}
@@ -57,7 +57,7 @@
                         <b class="row align-middle" style="margin-left: auto">{{ quote.getScoreInt }}</b>
 
                     {% if is_granted('ROLE_USER') %}
-                        <a class="row btn btn-danger" href="{{ path('quote_down', {id : quote.id, red: 'quote'})}}">\/</a>
+                        <a class="row btn btn-danger" href="{{ path('quote_down', {id : quote.id})}}">\/</a>
                     {% else %}
                         <a class="row btn btn-danger disabled" href="#">\/</a>
                     {% endif %}
@@ -79,6 +79,8 @@
             </li>
         {% endfor %}
         </ul>
+
+        {% if numberPage > 0 %}
         <nav aria-label="Navigation page" style="margin-top: 20px ;">
 
             <ul class="pagination justify-content-end">
@@ -110,7 +112,7 @@
                     {% if actualPage > 3  %}
                         {%  if numberPage - actualPage > 2 %}
 
-                            <li class="page-item"><a class="page-link" href="{{ path('quotes', {}) }}/1">1</a></li>
+                            <li class="page-item"><a class="page-link" href="{{ path('quotes', {}) }}/1/{{ nombre }}">1</a></li>
                             <li class="page-item page-link">...</li>
                             {% for i in (actualPage-1)..(actualPage+1) %}
                                 {% if i == actualPage %}
@@ -141,6 +143,7 @@
 
             </ul>
         </nav>
+        {% endif %}
     </div>
 
 

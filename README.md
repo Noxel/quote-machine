@@ -1,4 +1,4 @@
-# Projet de Quote Machine
+# Projet de Quote Machine ![logo](https://img.icons8.com/dusk/64/000000/bookmark.png)
 
 ## Installation
 
@@ -29,11 +29,12 @@ http://localhost:8000
  4. Pagination de la liste avec sélecteur 10/50/100 pour le nombre de quote afficher par page.
  5. On peut également faire une rechercher dans la liste des quote.
  
- ### Catégorie
- 1.Les catégorie sont lister on peut voir le slug de chaque catégorie.
-2. Les quote sont relier a des catégorie.
-3. Les catégorie ne sont éditable que par les admin.
-4. On peut afficher les quote par catégorie.
+ ### Catégorie 
+ 1. Les catégorie sont lister on peut voir le slug de chaque catégorie.
+ 2. Les quote sont relier a des catégorie.
+ 3. Les catégorie ne sont éditable que par les admin.
+ 4. On peut afficher les quote par catégorie.
+ 5. Pagination de la liste avec sélecteur 10/50/100 pour le nombre de quote afficher par page.
 
 ### Login
 
@@ -46,7 +47,7 @@ http://localhost:8000
 
 ### Commande 
 
-    php bin/console app:quote-random -help
+    php bin/console app:quote-random -c
 
 **Description:**
   Show a random quote.
@@ -60,6 +61,8 @@ http://localhost:8000
 
 **Help:**
   This command allows you to show a quote, you can chose between each category or none.
+#
+_ARESCALDINO
+Clément_ 
 
-
-
+LPWIMSI : 2018 - 2019

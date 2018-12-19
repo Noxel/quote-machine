@@ -261,10 +261,13 @@ class QuoteController extends Controller
     }
 
     /**
-     * @Route("/QuoteByCategorie/{slug}", name="quotebycategorie_categorie")
+     * @Route("/QuoteByCategorie/{slug}/{num}/{n}", name="quotebycategorie_categorie")
      */
-    public function quoteByCategorie($slug)
+    public function quoteByCategorie($slug, $num = null, $n = null)
     {
+        $num == null ? $num = 0 : $num = $num-1;
+        $n == null ? $n = 10 : true;
+
         $cat = $this->getDoctrine()->getRepository(Category::class)->findOneBy(['slug'=>$slug]);
         $quotes = $cat->getQuotes()->toArray();
 
@@ -272,8 +275,12 @@ class QuoteController extends Controller
 
 
         return $this->render('/quoteByCategorie.html.twig', [
-            'quotes' => $quotes ,
+            'quotes' => array_slice($quotes, $num * $n, $n),
             'cat' => $cat,
+            'slug' => $slug,
+            'numberPage' => ceil (count($quotes) / $n),
+            'actualPage' => $num +1,
+            'nombre' => $n,
         ]);
     }
 
@@ -298,7 +305,7 @@ class QuoteController extends Controller
     }
 
     /**
-     * @Route("/QuoteDown/{id}/{red}", name="quote_down" )
+     * @Route("/QuoteDown/{id}", name="quote_down" )
      * @IsGranted("ROLE_USER")
      */
     public function downScoreQuote(Quote $quote, Request $request){
