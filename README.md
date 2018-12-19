@@ -2,23 +2,44 @@
 
 ## Installation
 
-    git clone https://aresc002@iut-info.univ-reims.fr/gitlab/aresc002/quote-machine.git
-    cd quote-machine 
-    composer install
-    npm install
-    yarn install
-    yarn encode dev
+Clonage du projet :
+
+    $ git clone https://aresc002@iut-info.univ-reims.fr/gitlab/aresc002/quote-machine.git
+
+Se déplacer dans le projet :
+
+    $ cd quote-machine 
+
+Installations des dépendances : 
+
+    $ composer install
+    $ npm install
+    $ yarn install
+
+Compilation webpack :
+
+    $ yarn encore dev
 
 
-Définir L’URL de la DATABASE :
+Définir L’URL de la DATABASE dans les variables d'environnement du fichier `.env`  :
 
- **/.env**
 > DATABASE_URL=mysql://db_user:db_password@127.0.0.1:3306/db_name
 
-    php bin/console doctrine:database:create
-    php bin/console doctrine:migration:migrate
-    php bin/console doctrine:fixture:load
-    php bin/console server:run
+Création base de données :
+
+    $ php bin/console doctrine:database:create
+    
+Migration :
+
+    $ php bin/console doctrine:migration:migrate
+    
+Chargement fixture :
+
+    $ php bin/console doctrine:fixture:load
+
+Lancement du serveur de développement :
+
+    $ php bin/console server:start
 
 http://localhost:8000
 
@@ -31,8 +52,8 @@ http://localhost:8000
  3. On peut demander une quote aléatoire. 
  4. Pagination de la liste avec sélecteur 10/50/100 pour le nombre de quote afficher par page.
  5. On peut également faire une rechercher dans la liste des quote.
- 
- ### Catégorie 
+
+### Catégorie 
  
  1. Les catégorie sont lister on peut voir le slug de chaque catégorie.
  2. Les quote sont relier a des catégorie.
@@ -51,7 +72,7 @@ http://localhost:8000
 
 ### Commande 
 
-    php bin/console app:quote-random -c
+    $ php bin/console app:quote-random -c
 
 **Description:**
 
@@ -62,12 +83,23 @@ http://localhost:8000
 
 **Options:**
 
-  -c, --category        diplay the category choice
-  -h, --help            Display this help message
+  -c, --category      
+  
+  _Diplay the category choice_
+  
+  -h, --help  
+  
+  _Display this help message_
 
 **Help:**
 
   This command allows you to show a quote, you can chose between each category or none.
+
+### Test
+
+Exécution des tests :
+
+    $ php bin/phpunit
   
 ***
 
