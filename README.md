@@ -47,7 +47,7 @@ http://localhost:8000
 
 ### Quote
 
- 1. Création lier a un utilisateur qui pourras la supprimer ou la modifier (Voter).
+ 1. Création lier à un utilisateur qui pourra la supprimer ou la modifier (Voter).
  2. Vote positif ou négatif, un vote par utilisateur, ce qui trie les quote.
  3. On peut demander une quote aléatoire. 
  4. Pagination de la liste avec sélecteur 10/50/100 pour le nombre de quote afficher par page.
@@ -55,9 +55,9 @@ http://localhost:8000
 
 ### Catégorie 
  
- 1. Les catégorie sont lister on peut voir le slug de chaque catégorie.
- 2. Les quote sont relier a des catégorie.
- 3. Les catégorie ne sont éditable que par les admin.
+ 1. Les catégories sont lister on peut voir le slug de chaque catégorie.
+ 2. Les quote sont relié à des catégories.
+ 3. Les catégories ne sont éditables que par les admin.
  4. On peut afficher les quote par catégorie.
  5. Pagination de la liste avec sélecteur 10/50/100 pour le nombre de quote afficher par page.
 
